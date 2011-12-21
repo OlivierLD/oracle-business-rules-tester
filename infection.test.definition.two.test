@@ -1,0 +1,15 @@
+<rtf:test-description xmlns:rtf="urn:rules-testing-framework">
+   <rtf:repository-path>C:\_mywork\FusionApps\Nacho.Lafuente\02.Version.Two\oracle\rules\versiontwo\HostipalRules.rules</rtf:repository-path>
+   <rtf:facts-schema>C:\_mywork\FusionApps\Nacho.Lafuente\02.Version.Two\xsd\bacteriemia.xsd</rtf:facts-schema>
+   <rtf:java-source-dir>..\02.Version.Two\gen-src</rtf:java-source-dir>
+   <rtf:rulesets>
+      <rtf:ruleset-name>DummyRuleset</rtf:ruleset-name>
+   </rtf:rulesets>
+   <rtf:package-name></rtf:package-name>
+   <rtf:java-classes-dir>..\02.Version.Two\gen-cls</rtf:java-classes-dir>
+   <rtf:input-facts>..\02.Version.Two\test-data\input-facts.xml</rtf:input-facts>
+   <rtf:output-facts>..\02.Version.Two\output-facts</rtf:output-facts>
+   <rtf:use-assert-tree flag="false"/>
+   <rtf:generate-jar-file flag="true"/>
+   <rtf:verbose flag="false"/>
+</rtf:test-description>

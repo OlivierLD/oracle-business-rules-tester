@@ -1,0 +1,16 @@
+<rtf:test-description xmlns:rtf="urn:rules-testing-framework">
+   <rtf:repository-path>../01.Version.One/oracle/rules/versionone/InfectionDetectionRules.rules</rtf:repository-path>
+   <rtf:facts-schema>../01.Version.One/xsd/bacteriemia.xsd</rtf:facts-schema>
+   <rtf:java-source-dir>../01.Version.One/gen-src</rtf:java-source-dir>
+   <rtf:rulesets>
+      <rtf:ruleset-name>InfectionDetection</rtf:ruleset-name>
+      <rtf:ruleset-name>DummyRuleSet</rtf:ruleset-name>
+   </rtf:rulesets>
+   <rtf:package-name></rtf:package-name>
+   <rtf:java-classes-dir>../01.Version.One/gen-cls</rtf:java-classes-dir>
+   <rtf:input-facts>../01.Version.One/test-data/input-facts.xml</rtf:input-facts>
+   <rtf:output-facts>../01.Version.One/output-facts</rtf:output-facts>
+   <rtf:use-assert-tree flag="false"/>
+   <rtf:generate-jar-file flag="true"/>
+   <rtf:verbose flag="false"/>
+</rtf:test-description>
