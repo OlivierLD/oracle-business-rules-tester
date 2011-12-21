@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:inf="http://www.bacteriemia.org"
+            targetNamespace="http://www.bacteriemia.org"
+            elementFormDefault="qualified">
+  <xsd:element name="patient">
+    <xsd:annotation>
+      <xsd:documentation>
+        Schema for Nacho
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="name" type="xsd:string"/>
+        <xsd:element name="admission-date" type="xsd:dateTime"/>
+        <xsd:element name="clinical-data">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="catheter" type="inf:boolean-str"/>
+              <xsd:element name="catheter-last-48h" type="inf:boolean-str"/>
+              <xsd:element name="temperature" type="xsd:decimal"/>
+              <xsd:element name="other-secondary-infection"
+                           type="inf:boolean-str"/>
+              <xsd:element name="hemoculture" type="inf:hemoculture-type"
+                           minOccurs="0"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="conclusion" type="inf:final-conclusion"
+                     minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="boolean-str">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="true"/>
+      <xsd:enumeration value="false"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="exam-conclusion">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="positive"/>
+      <xsd:enumeration value="negative"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="hemoculture-type">
+    <xsd:sequence>
+      <xsd:element name="result" type="inf:exam-conclusion"/>
+      <xsd:element name="value" type="xsd:decimal"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="final-conclusion">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="BRC"/>
+      <xsd:enumeration value="no-infection"/>
+      <xsd:enumeration value="secondary-bacteremia"/>
+      <xsd:enumeration value="primary-bacteremia"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

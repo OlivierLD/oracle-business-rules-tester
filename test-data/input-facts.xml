@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<unit-testing-facts xmlns="urn:rules-unit">
+  <fact id="1">
+    <patient xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.bacteriemia.org xsd/bacteriemia.xsd"
+             xmlns="http://www.bacteriemia.org">
+      <name>Joe Shmow</name>
+      <admission-date>2011-10-18T10:10:00</admission-date>
+      <clinical-data>
+        <catheter>true</catheter>
+        <catheter-last-48h>true</catheter-last-48h>
+        <temperature>37</temperature>
+        <other-secondary-infection>false</other-secondary-infection>
+        <hemoculture>
+          <result>negative</result>
+          <value>0</value>
+        </hemoculture>
+      </clinical-data>
+      <!--conclusion></conclusion-->
+    </patient>
+  </fact>
+  <fact id="2">
+    <patient xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.bacteriemia.org xsd/bacteriemia.xsd"
+             xmlns="http://www.bacteriemia.org">
+      <name>Harry Birdman</name>
+      <admission-date>2011-10-16T10:10:00</admission-date>
+      <clinical-data>
+        <catheter>false</catheter>
+        <catheter-last-48h>true</catheter-last-48h>
+        <temperature>37</temperature>
+        <other-secondary-infection>false</other-secondary-infection>
+        <hemoculture>
+          <result>positive</result>
+          <value>0</value>
+        </hemoculture>
+      </clinical-data>
+      <!--conclusion></conclusion-->
+    </patient>
+  </fact>
+  <fact id="3">
+    <patient xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.bacteriemia.org xsd/bacteriemia.xsd"
+             xmlns="http://www.bacteriemia.org">
+      <name>George Bush</name>
+      <admission-date>2011-10-16T10:10:00</admission-date>
+      <clinical-data>
+        <catheter>false</catheter>
+        <catheter-last-48h>true</catheter-last-48h>
+        <temperature>40</temperature>
+        <other-secondary-infection>true</other-secondary-infection>
+        <hemoculture>
+          <result>positive</result>
+          <value>0</value>
+        </hemoculture>
+      </clinical-data>
+      <!--conclusion></conclusion-->
+    </patient>
+  </fact>
+  <fact id="4">
+    <patient xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.bacteriemia.org xsd/bacteriemia.xsd"
+             xmlns="http://www.bacteriemia.org">
+      <name>Bill Clinton</name>
+      <admission-date>2011-10-16T10:10:00.000-08:00</admission-date>
+      <clinical-data>
+        <catheter>false</catheter>
+        <catheter-last-48h>false</catheter-last-48h>
+        <temperature>40</temperature>
+        <other-secondary-infection>false</other-secondary-infection>
+        <hemoculture>
+          <result>positive</result>
+          <value>0</value>
+        </hemoculture>
+      </clinical-data>
+      <!--conclusion></conclusion-->
+    </patient>
+  </fact>
+  <fact id="4">
+    <patient xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.bacteriemia.org xsd/bacteriemia.xsd"
+             xmlns="http://www.bacteriemia.org">
+      <name>Barak Obama</name>
+      <admission-date>2011-10-16T10:10:00</admission-date>
+      <clinical-data>
+        <catheter>true</catheter>
+        <catheter-last-48h>false</catheter-last-48h>
+        <temperature>38</temperature>
+        <other-secondary-infection>false</other-secondary-infection>
+        <hemoculture>
+          <result>negative</result>
+          <value>0</value>
+        </hemoculture>
+      </clinical-data>
+      <!--conclusion></conclusion-->
+    </patient>
+  </fact>
+</unit-testing-facts>  

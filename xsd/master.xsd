@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.master.org"
+            targetNamespace="http://www.master.org"
+            xmlns:patient="http://www.bacteriemia.org"
+            elementFormDefault="qualified">
+  <xsd:import schemaLocation="bacteriemia.xsd"
+              namespace="http://www.bacteriemia.org"/>
+  <xsd:element name="master-message" type="generic-patient-type">
+    <xsd:annotation>
+      <xsd:documentation>
+        A sample element
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="generic-patient-type">
+    <xsd:sequence>
+      <xsd:element name="patient-name" type="xsd:string"/>
+      <xsd:choice>
+        <xsd:element ref="patient:patient"/>
+        <xsd:element name="for-admission">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="doctor" type="xsd:string"/>
+              <xsd:element name="room" type="xsd:string"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
