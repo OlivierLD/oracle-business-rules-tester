@@ -1,0 +1,2897 @@
+<?xml version="1.0"?>
+<RuleDictionary id="G}6c79b6e7:133ad284d5f:-7fff" xmlns="http://xmlns.oracle.com/rules/dictionary">
+    <Name>InfectionDetectionRuled</Name>
+    <Alias>InfectionDetectionRuled</Alias>
+    <Package>versionthree</Package>
+    <Version>11.1.1.0.0</Version>
+    <DataModel id="L}2">
+        <CreationUpdateNumber>2</CreationUpdateNumber>
+        <Function id="G}6c79b6e7:133ad284d5f:-7c03">
+            <Name>dateInHours</Name>
+            <Alias>dateInHours</Alias>
+            <Description>Return the number of hours the patient has been in the hospital</Description>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>20</CreationUpdateNumber>
+            <IDofType>J}long</IDofType>
+            <ListContentID>B}nil</ListContentID>
+            <Type>long</Type>
+            <IDofBucketSet>B}nil</IDofBucketSet>
+            <Form>Structured</Form>
+            <FormalParameter id="G}6c79b6e7:133ad284d5f:-7c02">
+                <Name>admissionDate</Name>
+                <Alias>admission-date</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>24</CreationUpdateNumber>
+                <IDofType>J}java.util.Calendar</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>Calendar</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </FormalParameter>
+            <Action id="L}216">
+                <Form>Assign New</Form>
+                <Target>Calendar</Target>
+                <ResolvedTarget>`J}java.util.Calendar`</ResolvedTarget>
+                <Expression id="L}217">
+                    <Value>Calendar.getInstance()</Value>
+                    <ResolvedValue>`J}java.util.Calendar`.`J}public static java.util.Calendar java.util.Calendar.getInstance()`()</ResolvedValue>
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Variable>currentDate</Variable>
+            </Action>
+            <Action id="L}218">
+                <Form>Assign New</Form>
+                <Target>long</Target>
+                <ResolvedTarget>`J}long`</ResolvedTarget>
+                <Expression id="L}219">
+                    <Value>currentDate.timeInMillis / (3600 * 1000)</Value>
+                    <ResolvedValue>`L}216`.`J}java.util.Calendar.{timeInMillis}` / (3600 * 1000)</ResolvedValue>
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Variable>currentDateInHours</Variable>
+            </Action>
+            <Action id="L}220">
+                <Form>Assign New</Form>
+                <Target>long</Target>
+                <ResolvedTarget>`J}long`</ResolvedTarget>
+                <Expression id="L}221">
+                    <Value>admission-date.timeInMillis / (3600 * 1000)</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c02`.`J}java.util.Calendar.{timeInMillis}` / (3600 * 1000)</ResolvedValue>
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Variable>admissionDateInHours</Variable>
+            </Action>
+            <Action id="L}222">
+                <Form>Return</Form>
+                <Expression id="L}223">
+                    <Value>(currentDateInHours - admissionDateInHours)</Value>
+                    <ResolvedValue>(`L}218` - `L}220`)</ResolvedValue>
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Action>
+            <ValidationUpdateNumber>32</ValidationUpdateNumber>
+        </Function>
+        <JaxbFactType id="J}org.bacteriemia.Patient">
+            <Name>org.bacteriemia.Patient</Name>
+            <Alias>patient</Alias>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <Property id="J}org.bacteriemia.Patient.{admissionDate}">
+                <Name>admissionDate</Name>
+                <Alias>admissionDate</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}javax.xml.datatype.XMLGregorianCalendar</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>XMLGregorianCalendar</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}23">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Property id="J}org.bacteriemia.Patient.{clinicalData}">
+                <Name>clinicalData</Name>
+                <Alias>clinicalData</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.Patient$ClinicalData</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>Patient$ClinicalData</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}24">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Property id="J}org.bacteriemia.Patient.{conclusion}">
+                <Name>conclusion</Name>
+                <Alias>conclusion</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>FinalConclusion</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c23</IDofBucketSet>
+                <BucketSet>FinalConclusion</BucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}25">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Property id="J}org.bacteriemia.Patient.{name}">
+                <Name>name</Name>
+                <Alias>name</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}java.lang.String</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}26">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Method id="J}public java.lang.String org.bacteriemia.Patient.getName()">
+                <Name>getName</Name>
+                <Alias>getName</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}8">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient.setName(java.lang.String)">
+                <Name>setName</Name>
+                <Alias>setName</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c3a">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}10">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public javax.xml.datatype.XMLGregorianCalendar org.bacteriemia.Patient.getAdmissionDate()">
+                <Name>getAdmissionDate</Name>
+                <Alias>getAdmissionDate</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}12">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}javax.xml.datatype.XMLGregorianCalendar</IDofType>
+                <Type>XMLGregorianCalendar</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient.setAdmissionDate(javax.xml.datatype.XMLGregorianCalendar)">
+                <Name>setAdmissionDate</Name>
+                <Alias>setAdmissionDate</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c39">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}javax.xml.datatype.XMLGregorianCalendar</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}14">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public org.bacteriemia.Patient$ClinicalData org.bacteriemia.Patient.getClinicalData()">
+                <Name>getClinicalData</Name>
+                <Alias>getClinicalData</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}16">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.Patient$ClinicalData</IDofType>
+                <Type>Patient$ClinicalData</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient.setClinicalData(org.bacteriemia.Patient$ClinicalData)">
+                <Name>setClinicalData</Name>
+                <Alias>setClinicalData</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c38">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}org.bacteriemia.Patient$ClinicalData</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}18">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public org.bacteriemia.FinalConclusion org.bacteriemia.Patient.getConclusion()">
+                <Name>getConclusion</Name>
+                <Alias>getConclusion</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}20">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+                <Type>FinalConclusion</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c23</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient.setConclusion(org.bacteriemia.FinalConclusion)">
+                <Name>setConclusion</Name>
+                <Alias>setConclusion</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c37">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}org.bacteriemia.FinalConclusion</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}22">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Constructor id="J}public org.bacteriemia.Patient()">
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}6">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+            </Constructor>
+            <IDofSuperClass>J}java.lang.Object</IDofSuperClass>
+            <ValidationUpdateNumber>4</ValidationUpdateNumber>
+            <Source>xsd/bacteriemia.xsd</Source>
+            <IsArray>false</IsArray>
+            <IDofArrayComponentType>B}nil</IDofArrayComponentType>
+            <SupportXPath>false</SupportXPath>
+            <IsInterface>false</IsInterface>
+            <Modifiers id="L}4">
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Access>1</Access>
+                <isStatic>false</isStatic>
+                <isFinal>false</isFinal>
+                <isAbstract>false</isAbstract>
+            </Modifiers>
+            <EnumBucketSetID>B}nil</EnumBucketSetID>
+            <Timestamp>0</Timestamp>
+            <ENUM>false</ENUM>
+            <XmlName>//xs:element[@name=&apos;patient&apos;]</XmlName>
+            <JAXB2.0>true</JAXB2.0>
+            <NodeName>patient</NodeName>
+            <Namespace>http://www.bacteriemia.org</Namespace>
+        </JaxbFactType>
+        <JaxbFactType id="J}org.bacteriemia.BooleanStr">
+            <Name>org.bacteriemia.BooleanStr</Name>
+            <Alias>BooleanStr</Alias>
+            <Visible>false</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <Field id="J}public static final org.bacteriemia.BooleanStr org.bacteriemia.BooleanStr.TRUE">
+                <Name>TRUE</Name>
+                <Alias>TRUE</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Final>true</Final>
+                <Static>true</Static>
+                <Modifiers id="L}30">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Enum>true</Enum>
+            </Field>
+            <Field id="J}public static final org.bacteriemia.BooleanStr org.bacteriemia.BooleanStr.FALSE">
+                <Name>FALSE</Name>
+                <Alias>FALSE</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Final>true</Final>
+                <Static>true</Static>
+                <Modifiers id="L}32">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Enum>true</Enum>
+            </Field>
+            <Property id="J}org.bacteriemia.BooleanStr.{declaringClass}">
+                <Name>declaringClass</Name>
+                <Alias>declaringClass</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}java.lang.Class</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>java.lang.Class</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>false</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}59">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Method id="J}public java.lang.String org.bacteriemia.BooleanStr.value()">
+                <Name>value</Name>
+                <Alias>value</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}34">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.BooleanStr[] org.bacteriemia.BooleanStr.values()">
+                <Name>values</Name>
+                <Alias>values</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}36">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}[Lorg.bacteriemia.BooleanStr;</IDofType>
+                <Type>BooleanStr[]</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.BooleanStr org.bacteriemia.BooleanStr.valueOf(java.lang.String)">
+                <Name>valueOf</Name>
+                <Alias>valueOf</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c36">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}38">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c2f</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.BooleanStr org.bacteriemia.BooleanStr.fromValue(java.lang.String)">
+                <Name>fromValue</Name>
+                <Alias>fromValue</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c35">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}40">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c2f</IDofBucketSet>
+            </Method>
+            <Method id="J}public final java.lang.String java.lang.Enum.name() declared in org.bacteriemia.BooleanStr">
+                <Name>name</Name>
+                <Alias>name</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}42">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final boolean java.lang.Enum.equals(java.lang.Object) declared in org.bacteriemia.BooleanStr">
+                <Name>equals</Name>
+                <Alias>equals</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c34">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Object</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}44">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}boolean</IDofType>
+                <Type>boolean</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public java.lang.String java.lang.Enum.toString() declared in org.bacteriemia.BooleanStr">
+                <Name>toString</Name>
+                <Alias>toString</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}46">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.hashCode() declared in org.bacteriemia.BooleanStr">
+                <Name>hashCode</Name>
+                <Alias>hashCode</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}48">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.compareTo(java.lang.Enum) declared in org.bacteriemia.BooleanStr">
+                <Name>compareTo</Name>
+                <Alias>compareTo</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c33">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Enum</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}50">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public int java.lang.Enum.compareTo(java.lang.Object) declared in org.bacteriemia.BooleanStr">
+                <Name>compareTo</Name>
+                <Alias>compareTo</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c32">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Object</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}52">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static java.lang.Enum java.lang.Enum.valueOf(java.lang.Class,java.lang.String) declared in org.bacteriemia.BooleanStr">
+                <Name>valueOf</Name>
+                <Alias>valueOf</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c31">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Class</IDsOfType>
+                </OverloadedParameter>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c30">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}54">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}java.lang.Enum</IDofType>
+                <Type>java.lang.Enum</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final java.lang.Class java.lang.Enum.getDeclaringClass() declared in org.bacteriemia.BooleanStr">
+                <Name>getDeclaringClass</Name>
+                <Alias>getDeclaringClass</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}56">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.Class</IDofType>
+                <Type>java.lang.Class</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.ordinal() declared in org.bacteriemia.BooleanStr">
+                <Name>ordinal</Name>
+                <Alias>ordinal</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}58">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <IDofSuperClass>J}java.lang.Enum</IDofSuperClass>
+            <ValidationUpdateNumber>4</ValidationUpdateNumber>
+            <Source>xsd/bacteriemia.xsd</Source>
+            <IsArray>false</IsArray>
+            <IDofArrayComponentType>B}nil</IDofArrayComponentType>
+            <SupportXPath>false</SupportXPath>
+            <IsInterface>false</IsInterface>
+            <Modifiers id="L}28">
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Access>1</Access>
+                <isStatic>false</isStatic>
+                <isFinal>true</isFinal>
+                <isAbstract>false</isAbstract>
+            </Modifiers>
+            <EnumBucketSetID>G}6c79b6e7:133ad284d5f:-7c2f</EnumBucketSetID>
+            <Timestamp>0</Timestamp>
+            <ENUM>true</ENUM>
+            <XmlName>//xs:simpleType[@name=&apos;boolean-str&apos;]</XmlName>
+            <JAXB2.0>true</JAXB2.0>
+            <NodeName>boolean-str</NodeName>
+            <Namespace>http://www.bacteriemia.org</Namespace>
+        </JaxbFactType>
+        <JaxbFactType id="J}org.bacteriemia.FinalConclusion">
+            <Name>org.bacteriemia.FinalConclusion</Name>
+            <Alias>FinalConclusion</Alias>
+            <Visible>false</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <Field id="J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.BRC">
+                <Name>BRC</Name>
+                <Alias>BRC</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>FinalConclusion</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Final>true</Final>
+                <Static>true</Static>
+                <Modifiers id="L}68">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Enum>true</Enum>
+            </Field>
+            <Field id="J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.NO_INFECTION">
+                <Name>NO_INFECTION</Name>
+                <Alias>NO_INFECTION</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>FinalConclusion</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Final>true</Final>
+                <Static>true</Static>
+                <Modifiers id="L}70">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Enum>true</Enum>
+            </Field>
+            <Field id="J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.SECONDARY_BACTEREMIA">
+                <Name>SECONDARY_BACTEREMIA</Name>
+                <Alias>SECONDARY_BACTEREMIA</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>FinalConclusion</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Final>true</Final>
+                <Static>true</Static>
+                <Modifiers id="L}72">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Enum>true</Enum>
+            </Field>
+            <Field id="J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.PRIMARY_BACTEREMIA">
+                <Name>PRIMARY_BACTEREMIA</Name>
+                <Alias>PRIMARY_BACTEREMIA</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>FinalConclusion</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Final>true</Final>
+                <Static>true</Static>
+                <Modifiers id="L}74">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Enum>true</Enum>
+            </Field>
+            <Property id="J}org.bacteriemia.FinalConclusion.{declaringClass}">
+                <Name>declaringClass</Name>
+                <Alias>declaringClass</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}java.lang.Class</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>java.lang.Class</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>false</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}101">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Method id="J}public java.lang.String org.bacteriemia.FinalConclusion.value()">
+                <Name>value</Name>
+                <Alias>value</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}76">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.FinalConclusion[] org.bacteriemia.FinalConclusion.values()">
+                <Name>values</Name>
+                <Alias>values</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}78">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}[Lorg.bacteriemia.FinalConclusion;</IDofType>
+                <Type>FinalConclusion[]</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.valueOf(java.lang.String)">
+                <Name>valueOf</Name>
+                <Alias>valueOf</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c2a">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}80">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+                <Type>FinalConclusion</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c23</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.fromValue(java.lang.String)">
+                <Name>fromValue</Name>
+                <Alias>fromValue</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c29">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}82">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+                <Type>FinalConclusion</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c23</IDofBucketSet>
+            </Method>
+            <Method id="J}public final java.lang.String java.lang.Enum.name() declared in org.bacteriemia.FinalConclusion">
+                <Name>name</Name>
+                <Alias>name</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}84">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final boolean java.lang.Enum.equals(java.lang.Object) declared in org.bacteriemia.FinalConclusion">
+                <Name>equals</Name>
+                <Alias>equals</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c28">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Object</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}86">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}boolean</IDofType>
+                <Type>boolean</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public java.lang.String java.lang.Enum.toString() declared in org.bacteriemia.FinalConclusion">
+                <Name>toString</Name>
+                <Alias>toString</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}88">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.hashCode() declared in org.bacteriemia.FinalConclusion">
+                <Name>hashCode</Name>
+                <Alias>hashCode</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}90">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.compareTo(java.lang.Enum) declared in org.bacteriemia.FinalConclusion">
+                <Name>compareTo</Name>
+                <Alias>compareTo</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c27">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Enum</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}92">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public int java.lang.Enum.compareTo(java.lang.Object) declared in org.bacteriemia.FinalConclusion">
+                <Name>compareTo</Name>
+                <Alias>compareTo</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c26">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Object</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}94">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static java.lang.Enum java.lang.Enum.valueOf(java.lang.Class,java.lang.String) declared in org.bacteriemia.FinalConclusion">
+                <Name>valueOf</Name>
+                <Alias>valueOf</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c25">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Class</IDsOfType>
+                </OverloadedParameter>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c24">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}96">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}java.lang.Enum</IDofType>
+                <Type>java.lang.Enum</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final java.lang.Class java.lang.Enum.getDeclaringClass() declared in org.bacteriemia.FinalConclusion">
+                <Name>getDeclaringClass</Name>
+                <Alias>getDeclaringClass</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}98">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.Class</IDofType>
+                <Type>java.lang.Class</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.ordinal() declared in org.bacteriemia.FinalConclusion">
+                <Name>ordinal</Name>
+                <Alias>ordinal</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}100">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <IDofSuperClass>J}java.lang.Enum</IDofSuperClass>
+            <ValidationUpdateNumber>4</ValidationUpdateNumber>
+            <Source>xsd/bacteriemia.xsd</Source>
+            <IsArray>false</IsArray>
+            <IDofArrayComponentType>B}nil</IDofArrayComponentType>
+            <SupportXPath>false</SupportXPath>
+            <IsInterface>false</IsInterface>
+            <Modifiers id="L}66">
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Access>1</Access>
+                <isStatic>false</isStatic>
+                <isFinal>true</isFinal>
+                <isAbstract>false</isAbstract>
+            </Modifiers>
+            <EnumBucketSetID>G}6c79b6e7:133ad284d5f:-7c23</EnumBucketSetID>
+            <Timestamp>0</Timestamp>
+            <ENUM>true</ENUM>
+            <XmlName>//xs:simpleType[@name=&apos;final-conclusion&apos;]</XmlName>
+            <JAXB2.0>true</JAXB2.0>
+            <NodeName>final-conclusion</NodeName>
+            <Namespace>http://www.bacteriemia.org</Namespace>
+        </JaxbFactType>
+        <JaxbFactType id="J}org.bacteriemia.HemocultureType">
+            <Name>org.bacteriemia.HemocultureType</Name>
+            <Alias>HemocultureType</Alias>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <Property id="J}org.bacteriemia.HemocultureType.{result}">
+                <Name>result</Name>
+                <Alias>result</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.ExamConclusion</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>ExamConclusion</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c0e</IDofBucketSet>
+                <BucketSet>ExamConclusion</BucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}121">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Property id="J}org.bacteriemia.HemocultureType.{value}">
+                <Name>value</Name>
+                <Alias>value</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}java.math.BigDecimal</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>BigDecimal</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}122">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Method id="J}public java.math.BigDecimal org.bacteriemia.HemocultureType.getValue()">
+                <Name>getValue</Name>
+                <Alias>getValue</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}114">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.math.BigDecimal</IDofType>
+                <Type>BigDecimal</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.HemocultureType.setValue(java.math.BigDecimal)">
+                <Name>setValue</Name>
+                <Alias>setValue</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c1c">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.math.BigDecimal</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}116">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public org.bacteriemia.ExamConclusion org.bacteriemia.HemocultureType.getResult()">
+                <Name>getResult</Name>
+                <Alias>getResult</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}118">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.ExamConclusion</IDofType>
+                <Type>ExamConclusion</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c0e</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.HemocultureType.setResult(org.bacteriemia.ExamConclusion)">
+                <Name>setResult</Name>
+                <Alias>setResult</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c1b">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}org.bacteriemia.ExamConclusion</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}120">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Constructor id="J}public org.bacteriemia.HemocultureType()">
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}112">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+            </Constructor>
+            <IDofSuperClass>J}java.lang.Object</IDofSuperClass>
+            <ValidationUpdateNumber>4</ValidationUpdateNumber>
+            <Source>xsd/bacteriemia.xsd</Source>
+            <IsArray>false</IsArray>
+            <IDofArrayComponentType>B}nil</IDofArrayComponentType>
+            <SupportXPath>false</SupportXPath>
+            <IsInterface>false</IsInterface>
+            <Modifiers id="L}110">
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Access>1</Access>
+                <isStatic>false</isStatic>
+                <isFinal>false</isFinal>
+                <isAbstract>false</isAbstract>
+            </Modifiers>
+            <EnumBucketSetID>B}nil</EnumBucketSetID>
+            <Timestamp>0</Timestamp>
+            <ENUM>false</ENUM>
+            <XmlName>//xs:complexType[@name=&apos;hemoculture-type&apos;]</XmlName>
+            <JAXB2.0>true</JAXB2.0>
+            <NodeName>hemoculture-type</NodeName>
+            <Namespace>http://www.bacteriemia.org</Namespace>
+        </JaxbFactType>
+        <JaxbFactType id="J}org.bacteriemia.Patient$ClinicalData">
+            <Name>org.bacteriemia.Patient$ClinicalData</Name>
+            <Alias>Patient$ClinicalData</Alias>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <Property id="J}org.bacteriemia.Patient$ClinicalData.{catheter}">
+                <Name>catheter</Name>
+                <Alias>catheter</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c2f</IDofBucketSet>
+                <BucketSet>BooleanStr</BucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}147">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Property id="J}org.bacteriemia.Patient$ClinicalData.{catheterLast48H}">
+                <Name>catheterLast48H</Name>
+                <Alias>catheterLast48H</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c2f</IDofBucketSet>
+                <BucketSet>BooleanStr</BucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}148">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Property id="J}org.bacteriemia.Patient$ClinicalData.{hemoculture}">
+                <Name>hemoculture</Name>
+                <Alias>hemoculture</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.HemocultureType</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>HemocultureType</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}149">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Property id="J}org.bacteriemia.Patient$ClinicalData.{otherSecondaryInfection}">
+                <Name>otherSecondaryInfection</Name>
+                <Alias>otherSecondaryInfection</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c2f</IDofBucketSet>
+                <BucketSet>BooleanStr</BucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}150">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Property id="J}org.bacteriemia.Patient$ClinicalData.{temperature}">
+                <Name>temperature</Name>
+                <Alias>temperature</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}java.math.BigDecimal</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>BigDecimal</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>true</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}151">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Method id="J}public org.bacteriemia.BooleanStr org.bacteriemia.Patient$ClinicalData.getCatheter()">
+                <Name>getCatheter</Name>
+                <Alias>getCatheter</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}128">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient$ClinicalData.setCatheter(org.bacteriemia.BooleanStr)">
+                <Name>setCatheter</Name>
+                <Alias>setCatheter</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c1a">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}org.bacteriemia.BooleanStr</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}130">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public org.bacteriemia.BooleanStr org.bacteriemia.Patient$ClinicalData.getCatheterLast48H()">
+                <Name>getCatheterLast48H</Name>
+                <Alias>getCatheterLast48H</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}132">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient$ClinicalData.setCatheterLast48H(org.bacteriemia.BooleanStr)">
+                <Name>setCatheterLast48H</Name>
+                <Alias>setCatheterLast48H</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c19">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}org.bacteriemia.BooleanStr</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}134">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public java.math.BigDecimal org.bacteriemia.Patient$ClinicalData.getTemperature()">
+                <Name>getTemperature</Name>
+                <Alias>getTemperature</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}136">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.math.BigDecimal</IDofType>
+                <Type>BigDecimal</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient$ClinicalData.setTemperature(java.math.BigDecimal)">
+                <Name>setTemperature</Name>
+                <Alias>setTemperature</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c18">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.math.BigDecimal</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}138">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public org.bacteriemia.BooleanStr org.bacteriemia.Patient$ClinicalData.getOtherSecondaryInfection()">
+                <Name>getOtherSecondaryInfection</Name>
+                <Alias>getOtherSecondaryInfection</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}140">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+                <Type>BooleanStr</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient$ClinicalData.setOtherSecondaryInfection(org.bacteriemia.BooleanStr)">
+                <Name>setOtherSecondaryInfection</Name>
+                <Alias>setOtherSecondaryInfection</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c17">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}org.bacteriemia.BooleanStr</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}142">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public org.bacteriemia.HemocultureType org.bacteriemia.Patient$ClinicalData.getHemoculture()">
+                <Name>getHemoculture</Name>
+                <Alias>getHemoculture</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}144">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.HemocultureType</IDofType>
+                <Type>HemocultureType</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public void org.bacteriemia.Patient$ClinicalData.setHemoculture(org.bacteriemia.HemocultureType)">
+                <Name>setHemoculture</Name>
+                <Alias>setHemoculture</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c16">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}org.bacteriemia.HemocultureType</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}146">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}void</IDofType>
+                <Type>void</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Constructor id="J}public org.bacteriemia.Patient$ClinicalData()">
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}126">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+            </Constructor>
+            <IDofSuperClass>J}java.lang.Object</IDofSuperClass>
+            <ValidationUpdateNumber>4</ValidationUpdateNumber>
+            <Source>xsd/bacteriemia.xsd</Source>
+            <IsArray>false</IsArray>
+            <IDofArrayComponentType>B}nil</IDofArrayComponentType>
+            <SupportXPath>false</SupportXPath>
+            <IsInterface>false</IsInterface>
+            <Modifiers id="L}124">
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Access>1</Access>
+                <isStatic>true</isStatic>
+                <isFinal>false</isFinal>
+                <isAbstract>false</isAbstract>
+            </Modifiers>
+            <EnumBucketSetID>B}nil</EnumBucketSetID>
+            <Timestamp>0</Timestamp>
+            <ENUM>false</ENUM>
+            <XmlName>.//xs:element[@name=&apos;clinical-data&apos;]</XmlName>
+            <JAXB2.0>true</JAXB2.0>
+            <NodeName>clinical-data</NodeName>
+            <Namespace>http://www.bacteriemia.org</Namespace>
+        </JaxbFactType>
+        <JaxbFactType id="J}org.bacteriemia.ExamConclusion">
+            <Name>org.bacteriemia.ExamConclusion</Name>
+            <Alias>ExamConclusion</Alias>
+            <Visible>false</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <Field id="J}public static final org.bacteriemia.ExamConclusion org.bacteriemia.ExamConclusion.POSITIVE">
+                <Name>POSITIVE</Name>
+                <Alias>POSITIVE</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.ExamConclusion</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>ExamConclusion</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Final>true</Final>
+                <Static>true</Static>
+                <Modifiers id="L}155">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Enum>true</Enum>
+            </Field>
+            <Field id="J}public static final org.bacteriemia.ExamConclusion org.bacteriemia.ExamConclusion.NEGATIVE">
+                <Name>NEGATIVE</Name>
+                <Alias>NEGATIVE</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.ExamConclusion</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>ExamConclusion</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Final>true</Final>
+                <Static>true</Static>
+                <Modifiers id="L}157">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Enum>true</Enum>
+            </Field>
+            <Property id="J}org.bacteriemia.ExamConclusion.{declaringClass}">
+                <Name>declaringClass</Name>
+                <Alias>declaringClass</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <IDofType>J}java.lang.Class</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>java.lang.Class</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+                <Writable>false</Writable>
+                <Readable>true</Readable>
+                <Local>true</Local>
+                <Expression id="L}184">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <PrimaryKey>false</PrimaryKey>
+            </Property>
+            <Method id="J}public java.lang.String org.bacteriemia.ExamConclusion.value()">
+                <Name>value</Name>
+                <Alias>value</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}159">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.ExamConclusion[] org.bacteriemia.ExamConclusion.values()">
+                <Name>values</Name>
+                <Alias>values</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}161">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}[Lorg.bacteriemia.ExamConclusion;</IDofType>
+                <Type>ExamConclusion[]</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.ExamConclusion org.bacteriemia.ExamConclusion.valueOf(java.lang.String)">
+                <Name>valueOf</Name>
+                <Alias>valueOf</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c15">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}163">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}org.bacteriemia.ExamConclusion</IDofType>
+                <Type>ExamConclusion</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c0e</IDofBucketSet>
+            </Method>
+            <Method id="J}public static org.bacteriemia.ExamConclusion org.bacteriemia.ExamConclusion.fromValue(java.lang.String)">
+                <Name>fromValue</Name>
+                <Alias>fromValue</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c14">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}165">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}org.bacteriemia.ExamConclusion</IDofType>
+                <Type>ExamConclusion</Type>
+                <IDofBucketSet>G}6c79b6e7:133ad284d5f:-7c0e</IDofBucketSet>
+            </Method>
+            <Method id="J}public final java.lang.String java.lang.Enum.name() declared in org.bacteriemia.ExamConclusion">
+                <Name>name</Name>
+                <Alias>name</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}167">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final boolean java.lang.Enum.equals(java.lang.Object) declared in org.bacteriemia.ExamConclusion">
+                <Name>equals</Name>
+                <Alias>equals</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c13">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Object</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}169">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}boolean</IDofType>
+                <Type>boolean</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public java.lang.String java.lang.Enum.toString() declared in org.bacteriemia.ExamConclusion">
+                <Name>toString</Name>
+                <Alias>toString</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}171">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.String</IDofType>
+                <Type>String</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.hashCode() declared in org.bacteriemia.ExamConclusion">
+                <Name>hashCode</Name>
+                <Alias>hashCode</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}173">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.compareTo(java.lang.Enum) declared in org.bacteriemia.ExamConclusion">
+                <Name>compareTo</Name>
+                <Alias>compareTo</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c12">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Enum</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}175">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public int java.lang.Enum.compareTo(java.lang.Object) declared in org.bacteriemia.ExamConclusion">
+                <Name>compareTo</Name>
+                <Alias>compareTo</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c11">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Object</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}177">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public static java.lang.Enum java.lang.Enum.valueOf(java.lang.Class,java.lang.String) declared in org.bacteriemia.ExamConclusion">
+                <Name>valueOf</Name>
+                <Alias>valueOf</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c10">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.Class</IDsOfType>
+                </OverloadedParameter>
+                <OverloadedParameter id="G}6c79b6e7:133ad284d5f:-7c0f">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <IDsOfType>J}java.lang.String</IDsOfType>
+                </OverloadedParameter>
+                <Modifiers id="L}179">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>true</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>true</Static>
+                <IDofType>J}java.lang.Enum</IDofType>
+                <Type>java.lang.Enum</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final java.lang.Class java.lang.Enum.getDeclaringClass() declared in org.bacteriemia.ExamConclusion">
+                <Name>getDeclaringClass</Name>
+                <Alias>getDeclaringClass</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}181">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}java.lang.Class</IDofType>
+                <Type>java.lang.Class</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public final int java.lang.Enum.ordinal() declared in org.bacteriemia.ExamConclusion">
+                <Name>ordinal</Name>
+                <Alias>ordinal</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}183">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>true</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}int</IDofType>
+                <Type>int</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <IDofSuperClass>J}java.lang.Enum</IDofSuperClass>
+            <ValidationUpdateNumber>4</ValidationUpdateNumber>
+            <Source>xsd/bacteriemia.xsd</Source>
+            <IsArray>false</IsArray>
+            <IDofArrayComponentType>B}nil</IDofArrayComponentType>
+            <SupportXPath>false</SupportXPath>
+            <IsInterface>false</IsInterface>
+            <Modifiers id="L}153">
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Access>1</Access>
+                <isStatic>false</isStatic>
+                <isFinal>true</isFinal>
+                <isAbstract>false</isAbstract>
+            </Modifiers>
+            <EnumBucketSetID>G}6c79b6e7:133ad284d5f:-7c0e</EnumBucketSetID>
+            <Timestamp>0</Timestamp>
+            <ENUM>true</ENUM>
+            <XmlName>//xs:simpleType[@name=&apos;exam-conclusion&apos;]</XmlName>
+            <JAXB2.0>true</JAXB2.0>
+            <NodeName>exam-conclusion</NodeName>
+            <Namespace>http://www.bacteriemia.org</Namespace>
+        </JaxbFactType>
+        <JaxbFactType id="J}org.bacteriemia.ObjectFactory">
+            <Name>org.bacteriemia.ObjectFactory</Name>
+            <Alias>org_bacteriemia_ObjectFactory</Alias>
+            <Visible>false</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <Method id="J}public org.bacteriemia.Patient org.bacteriemia.ObjectFactory.createPatient()">
+                <Name>createPatient</Name>
+                <Alias>createPatient</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}195">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.Patient</IDofType>
+                <Type>patient</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public org.bacteriemia.Patient$ClinicalData org.bacteriemia.ObjectFactory.createPatientClinicalData()">
+                <Name>createPatientClinicalData</Name>
+                <Alias>createPatientClinicalData</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}197">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.Patient$ClinicalData</IDofType>
+                <Type>Patient$ClinicalData</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Method id="J}public org.bacteriemia.HemocultureType org.bacteriemia.ObjectFactory.createHemocultureType()">
+                <Name>createHemocultureType</Name>
+                <Alias>createHemocultureType</Alias>
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}199">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+                <Static>false</Static>
+                <IDofType>J}org.bacteriemia.HemocultureType</IDofType>
+                <Type>HemocultureType</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </Method>
+            <Constructor id="J}public org.bacteriemia.ObjectFactory()">
+                <Visible>false</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Modifiers id="L}193">
+                    <CreationUpdateNumber>4</CreationUpdateNumber>
+                    <Access>1</Access>
+                    <isStatic>false</isStatic>
+                    <isFinal>false</isFinal>
+                    <isAbstract>false</isAbstract>
+                </Modifiers>
+            </Constructor>
+            <IDofSuperClass>J}java.lang.Object</IDofSuperClass>
+            <ValidationUpdateNumber>4</ValidationUpdateNumber>
+            <Source>xsd/bacteriemia.xsd</Source>
+            <IsArray>false</IsArray>
+            <IDofArrayComponentType>B}nil</IDofArrayComponentType>
+            <SupportXPath>false</SupportXPath>
+            <IsInterface>false</IsInterface>
+            <Modifiers id="L}191">
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Access>1</Access>
+                <isStatic>false</isStatic>
+                <isFinal>false</isFinal>
+                <isAbstract>false</isAbstract>
+            </Modifiers>
+            <EnumBucketSetID>B}nil</EnumBucketSetID>
+            <Timestamp>0</Timestamp>
+            <ENUM>false</ENUM>
+            <JAXB2.0>true</JAXB2.0>
+        </JaxbFactType>
+        <BucketSet id="G}6c79b6e7:133ad284d5f:-7c2f">
+            <Name>BooleanStr</Name>
+            <Alias>BooleanStr</Alias>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <IDofType>J}org.bacteriemia.BooleanStr</IDofType>
+            <ListContentID>B}nil</ListContentID>
+            <Type>BooleanStr</Type>
+            <Form>Enum</Form>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c2d">
+                <Name>BooleanStr.TRUE</Name>
+                <Alias>TRUE</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>false</Excluded>
+                <Expression id="L}62">
+                    <Value>BooleanStr.TRUE</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c2f`.`J}public static final org.bacteriemia.BooleanStr org.bacteriemia.BooleanStr.TRUE`</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c2c">
+                <Name>BooleanStr.FALSE</Name>
+                <Alias>FALSE</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>false</Excluded>
+                <Expression id="L}63">
+                    <Value>BooleanStr.FALSE</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c2f`.`J}public static final org.bacteriemia.BooleanStr org.bacteriemia.BooleanStr.FALSE`</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c2b">
+                <Name>null</Name>
+                <Alias>null</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>true</Excluded>
+                <Expression id="L}64">
+                    <Value>null</Value>
+                    <ResolvedValue>null</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <CalendarForm>Date</CalendarForm>
+            <Excluded>false</Excluded>
+            <ValidationUpdateNumber>17</ValidationUpdateNumber>
+        </BucketSet>
+        <BucketSet id="G}6c79b6e7:133ad284d5f:-7c23">
+            <Name>FinalConclusion</Name>
+            <Alias>FinalConclusion</Alias>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <IDofType>J}org.bacteriemia.FinalConclusion</IDofType>
+            <ListContentID>B}nil</ListContentID>
+            <Type>FinalConclusion</Type>
+            <Form>Enum</Form>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c21">
+                <Name>FinalConclusion.BRC</Name>
+                <Alias>BRC</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>false</Excluded>
+                <Expression id="L}104">
+                    <Value>FinalConclusion.BRC</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.BRC`</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c20">
+                <Name>FinalConclusion.NO_INFECTION</Name>
+                <Alias>NO_INFECTION</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>false</Excluded>
+                <Expression id="L}105">
+                    <Value>FinalConclusion.NO_INFECTION</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.NO_INFECTION`</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c1f">
+                <Name>FinalConclusion.SECONDARY_BACTEREMIA</Name>
+                <Alias>SECONDARY_BACTEREMIA</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>false</Excluded>
+                <Expression id="L}106">
+                    <Value>FinalConclusion.SECONDARY_BACTEREMIA</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.SECONDARY_BACTEREMIA`</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c1e">
+                <Name>FinalConclusion.PRIMARY_BACTEREMIA</Name>
+                <Alias>PRIMARY_BACTEREMIA</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>false</Excluded>
+                <Expression id="L}107">
+                    <Value>FinalConclusion.PRIMARY_BACTEREMIA</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.PRIMARY_BACTEREMIA`</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c1d">
+                <Name>null</Name>
+                <Alias>null</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>true</Excluded>
+                <Expression id="L}108">
+                    <Value>null</Value>
+                    <ResolvedValue>null</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <CalendarForm>Date</CalendarForm>
+            <Excluded>false</Excluded>
+            <ValidationUpdateNumber>18</ValidationUpdateNumber>
+        </BucketSet>
+        <BucketSet id="G}6c79b6e7:133ad284d5f:-7c0e">
+            <Name>ExamConclusion</Name>
+            <Alias>ExamConclusion</Alias>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <IDofType>J}org.bacteriemia.ExamConclusion</IDofType>
+            <ListContentID>B}nil</ListContentID>
+            <Type>ExamConclusion</Type>
+            <Form>Enum</Form>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c0c">
+                <Name>ExamConclusion.POSITIVE</Name>
+                <Alias>POSITIVE</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>false</Excluded>
+                <Expression id="L}187">
+                    <Value>ExamConclusion.POSITIVE</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c0e`.`J}public static final org.bacteriemia.ExamConclusion org.bacteriemia.ExamConclusion.POSITIVE`</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c0b">
+                <Name>ExamConclusion.NEGATIVE</Name>
+                <Alias>NEGATIVE</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>false</Excluded>
+                <Expression id="L}188">
+                    <Value>ExamConclusion.NEGATIVE</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c0e`.`J}public static final org.bacteriemia.ExamConclusion org.bacteriemia.ExamConclusion.NEGATIVE`</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <Bucket id="G}6c79b6e7:133ad284d5f:-7c0a">
+                <Name>null</Name>
+                <Alias>null</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>4</CreationUpdateNumber>
+                <Inclusive>false</Inclusive>
+                <Otherwise>false</Otherwise>
+                <Excluded>true</Excluded>
+                <Expression id="L}189">
+                    <Value>null</Value>
+                    <ResolvedValue>null</ResolvedValue>
+                    <IsConstant>true</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Bucket>
+            <CalendarForm>Date</CalendarForm>
+            <Excluded>false</Excluded>
+            <ValidationUpdateNumber>19</ValidationUpdateNumber>
+        </BucketSet>
+        <SupportsXPathEnabled>false</SupportsXPathEnabled>
+        <DecisionFunction id="G}6c79b6e7:133ad284d5f:-7c08">
+            <Name>InfectionDetectionRuled_DecisionService_1</Name>
+            <Alias>InfectionDetectionRuled_DecisionService_1</Alias>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>4</CreationUpdateNumber>
+            <WebService>true</WebService>
+            <CheckRuleFlow>true</CheckRuleFlow>
+            <Stateless>true</Stateless>
+            <DecisionFunctionInput id="L}201">
+                <Name>patient</Name>
+                <Alias>patient</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>6</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.Patient</IDofType>
+                <List>false</List>
+                <Tree>true</Tree>
+            </DecisionFunctionInput>
+            <DecisionFunctionRuleSet id="L}200">
+                <CreationUpdateNumber>5</CreationUpdateNumber>
+                <Form>rule set</Form>
+                <Ruleset>InfectionDetection</Ruleset>
+                <DecisionFunction>InfectionDetection</DecisionFunction>
+                <refID>G}6c79b6e7:133ad284d5f:-7c09</refID>
+            </DecisionFunctionRuleSet>
+            <DecisionFunctionOutput id="L}202">
+                <Name>patient</Name>
+                <Alias>patient</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>7</CreationUpdateNumber>
+                <IDofType>J}org.bacteriemia.Patient</IDofType>
+                <List>false</List>
+                <Tree>false</Tree>
+            </DecisionFunctionOutput>
+            <ValidationUpdateNumber>41</ValidationUpdateNumber>
+            <RuleFiringLimit>unlimited</RuleFiringLimit>
+        </DecisionFunction>
+        <UpdateNumber>103</UpdateNumber>
+        <ValidationUpdateNumber>103</ValidationUpdateNumber>
+    </DataModel>
+    <RuleSet id="G}6c79b6e7:133ad284d5f:-7c09">
+        <Name>InfectionDetection</Name>
+        <Alias>InfectionDetection</Alias>
+        <ValidationUpdateNumber>104</ValidationUpdateNumber>
+        <Customizable>true</Customizable>
+        <Active>true</Active>
+        <CalendarForm>DateTime</CalendarForm>
+        <Rule id="G}6c79b6e7:133ad284d5f:-7c06">
+            <Name>DummyRule</Name>
+            <Alias>DummyRule</Alias>
+            <ValidationUpdateNumber>104</ValidationUpdateNumber>
+            <Priority>medium</Priority>
+            <Customizable>true</Customizable>
+            <Active>true</Active>
+            <CalendarForm>DateTime</CalendarForm>
+            <Pattern id="L}203">
+                <Form>Fact Type</Form>
+                <FactType>patient</FactType>
+                <IDofFactType>J}org.bacteriemia.Patient</IDofFactType>
+                <Connective>&amp;&amp;</Connective>
+                <TestForm>Simple</TestForm>
+                <Expression id="L}204">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Variable>p</Variable>
+                <Operator>(for each case where)</Operator>
+                <SimpleTest id="L}227">
+                    <Expression id="L}228">
+                        <Value>dateInHours(p.admissionDate)</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c03`(`L}203`.`J}org.bacteriemia.Patient.{admissionDate}`)</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterID>B}nil</ParameterID>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                    <Expression id="L}229">
+                        <Value>48</Value>
+                        <ResolvedValue>48</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterID>B}nil</ParameterID>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                    <IDofOperator>B}&lt;=</IDofOperator>
+                    <Connective>&amp;&amp;</Connective>
+                    <Form>FormNotNested</Form>
+                </SimpleTest>
+                <FactPath>patient</FactPath>
+                <FactPathIDs>L}203</FactPathIDs>
+            </Pattern>
+            <ShowPatterns>true</ShowPatterns>
+            <TreeMode>false</TreeMode>
+            <Visible>true</Visible>
+            <Logical>false</Logical>
+            <Action id="L}230">
+                <Form>Call</Form>
+                <Target>print</Target>
+                <ResolvedTarget>`B}function.println`</ResolvedTarget>
+                <Expression id="L}231">
+                    <Value>p.name + &quot; was not here long enough&quot;</Value>
+                    <ResolvedValue>`L}203`.`J}org.bacteriemia.Patient.{name}` + &quot; was not here long enough&quot;</ResolvedValue>
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>message</ParameterAlias>
+                    <ParameterID>B}function.println_message</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Action>
+            <Action id="L}383">
+                <Form>Modify</Form>
+                <Target>p</Target>
+                <ResolvedTarget>`L}203`</ResolvedTarget>
+                <Expression id="L}385">
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>admissionDate</ParameterAlias>
+                    <ParameterID>J}org.bacteriemia.Patient.{admissionDate}</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Expression id="L}386">
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>clinicalData</ParameterAlias>
+                    <ParameterID>J}org.bacteriemia.Patient.{clinicalData}</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Expression id="L}387">
+                    <Value>FinalConclusion.NO_INFECTION</Value>
+                    <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.NO_INFECTION`</ResolvedValue>
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>conclusion</ParameterAlias>
+                    <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Expression id="L}388">
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>name</ParameterAlias>
+                    <ParameterID>J}org.bacteriemia.Patient.{name}</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Action>
+        </Rule>
+        <RuleSheet id="G}6c79b6e7:133ad284d5f:-7c01">
+            <Name>NosocomialInfection</Name>
+            <Alias>NosocomialInfection</Alias>
+            <ValidationUpdateNumber>101</ValidationUpdateNumber>
+            <Priority>medium</Priority>
+            <Customizable>true</Customizable>
+            <Active>true</Active>
+            <CalendarForm>DateTime</CalendarForm>
+            <Pattern id="L}235">
+                <Form>Fact Type</Form>
+                <FactType>patient</FactType>
+                <IDofFactType>J}org.bacteriemia.Patient</IDofFactType>
+                <Connective>&amp;&amp;</Connective>
+                <TestForm>Simple</TestForm>
+                <Expression id="L}236">
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Operator>(for each case where)</Operator>
+                <SimpleTest id="L}245">
+                    <Expression id="L}246">
+                        <Value>dateInHours(patient.admissionDate.toGregorianCalendar())</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c03`(`L}235`.`J}org.bacteriemia.Patient.{admissionDate}`.`J}public abstract java.util.GregorianCalendar javax.xml.datatype.XMLGregorianCalendar.toGregorianCalendar()`())</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterID>B}nil</ParameterID>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                    <Expression id="L}247">
+                        <Value>48</Value>
+                        <ResolvedValue>48</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterID>B}nil</ParameterID>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                    <IDofOperator>B}&gt;</IDofOperator>
+                    <Connective>&amp;&amp;</Connective>
+                    <Form>FormNotNested</Form>
+                </SimpleTest>
+                <FactPath>patient</FactPath>
+                <FactPathIDs>L}235</FactPathIDs>
+            </Pattern>
+            <ShowPatterns>true</ShowPatterns>
+            <TreeMode>false</TreeMode>
+            <Visible>true</Visible>
+            <Logical>false</Logical>
+            <Dimension id="L}232">
+                <Value>patient.clinicalData.catheter</Value>
+                <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{clinicalData}`.`J}org.bacteriemia.Patient$ClinicalData.{catheter}`</ResolvedValue>
+                <IsConstant>false</IsConstant>
+                <ParameterID>B}nil</ParameterID>
+                <Customizable>false</Customizable>
+                <DimensionNode id="L}233">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2d</BucketIDTable>
+                    <ParentDimensionNode>B}nil</ParentDimensionNode>
+                    <ChildDimensionNodes>L}252</ChildDimensionNodes>
+                    <Values>TRUE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}261">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2c</BucketIDTable>
+                    <ParentDimensionNode>B}nil</ParentDimensionNode>
+                    <ChildDimensionNodes>L}262 L}270</ChildDimensionNodes>
+                    <Values>FALSE</Values>
+                </DimensionNode>
+                <IDofSharedBucketSet>G}6c79b6e7:133ad284d5f:-7c2f</IDofSharedBucketSet>
+                <PrivateBucketSet id="G}6c79b6e7:133ad284d5f:-7c00">
+                    <Visible>true</Visible>
+                    <CreationUpdateNumber>44</CreationUpdateNumber>
+                    <IDofType>B}nil</IDofType>
+                    <ListContentID>B}nil</ListContentID>
+                    <Form>LOV</Form>
+                    <CalendarForm>Date</CalendarForm>
+                    <Excluded>false</Excluded>
+                    <ValidationUpdateNumber>-1</ValidationUpdateNumber>
+                </PrivateBucketSet>
+                <SharedBucketSet>BooleanStr</SharedBucketSet>
+            </Dimension>
+            <Dimension id="L}251">
+                <Value>patient.clinicalData.catheterLast48H</Value>
+                <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{clinicalData}`.`J}org.bacteriemia.Patient$ClinicalData.{catheterLast48H}`</ResolvedValue>
+                <IsConstant>false</IsConstant>
+                <ParameterID>B}nil</ParameterID>
+                <Customizable>false</Customizable>
+                <DimensionNode id="L}252">
+                    <BucketIDTable></BucketIDTable>
+                    <ParentDimensionNode>L}233</ParentDimensionNode>
+                    <ChildDimensionNodes>L}256 L}274</ChildDimensionNodes>
+                    <Values>-</Values>
+                </DimensionNode>
+                <DimensionNode id="L}262">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2d</BucketIDTable>
+                    <ParentDimensionNode>L}261</ParentDimensionNode>
+                    <ChildDimensionNodes>L}263 L}280</ChildDimensionNodes>
+                    <Values>TRUE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}270">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2c</BucketIDTable>
+                    <ParentDimensionNode>L}261</ParentDimensionNode>
+                    <ChildDimensionNodes>L}271 L}283</ChildDimensionNodes>
+                    <Values>FALSE</Values>
+                </DimensionNode>
+                <IDofSharedBucketSet>G}6c79b6e7:133ad284d5f:-7c2f</IDofSharedBucketSet>
+                <PrivateBucketSet id="G}6c79b6e7:133ad284d5f:-7bfd">
+                    <Visible>true</Visible>
+                    <CreationUpdateNumber>56</CreationUpdateNumber>
+                    <IDofType>B}nil</IDofType>
+                    <ListContentID>B}nil</ListContentID>
+                    <Form>Default</Form>
+                    <CalendarForm>Date</CalendarForm>
+                    <Excluded>false</Excluded>
+                    <ValidationUpdateNumber>-1</ValidationUpdateNumber>
+                </PrivateBucketSet>
+                <SharedBucketSet>BooleanStr</SharedBucketSet>
+            </Dimension>
+            <Dimension id="L}255">
+                <Value>patient.clinicalData.hemoculture.result</Value>
+                <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{clinicalData}`.`J}org.bacteriemia.Patient$ClinicalData.{hemoculture}`.`J}org.bacteriemia.HemocultureType.{result}`</ResolvedValue>
+                <IsConstant>false</IsConstant>
+                <ParameterID>B}nil</ParameterID>
+                <Customizable>false</Customizable>
+                <DimensionNode id="L}256">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c0c</BucketIDTable>
+                    <ParentDimensionNode>L}252</ParentDimensionNode>
+                    <ChildDimensionNodes>L}260 L}286</ChildDimensionNodes>
+                    <Values>POSITIVE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}274">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c0b</BucketIDTable>
+                    <ParentDimensionNode>L}252</ParentDimensionNode>
+                    <ChildDimensionNodes>L}275</ChildDimensionNodes>
+                    <Values>NEGATIVE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}263">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c0c</BucketIDTable>
+                    <ParentDimensionNode>L}262</ParentDimensionNode>
+                    <ChildDimensionNodes>L}264 L}294</ChildDimensionNodes>
+                    <Values>POSITIVE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}280">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c0b</BucketIDTable>
+                    <ParentDimensionNode>L}262</ParentDimensionNode>
+                    <ChildDimensionNodes>L}281</ChildDimensionNodes>
+                    <Values>NEGATIVE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}271">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c0c</BucketIDTable>
+                    <ParentDimensionNode>L}270</ParentDimensionNode>
+                    <ChildDimensionNodes>L}272 L}298</ChildDimensionNodes>
+                    <Values>POSITIVE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}283">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c0b</BucketIDTable>
+                    <ParentDimensionNode>L}270</ParentDimensionNode>
+                    <ChildDimensionNodes>L}284</ChildDimensionNodes>
+                    <Values>NEGATIVE</Values>
+                </DimensionNode>
+                <IDofSharedBucketSet>G}6c79b6e7:133ad284d5f:-7c0e</IDofSharedBucketSet>
+                <PrivateBucketSet id="G}6c79b6e7:133ad284d5f:-7bfc">
+                    <Visible>true</Visible>
+                    <CreationUpdateNumber>58</CreationUpdateNumber>
+                    <IDofType>B}nil</IDofType>
+                    <ListContentID>B}nil</ListContentID>
+                    <Form>Default</Form>
+                    <CalendarForm>Date</CalendarForm>
+                    <Excluded>false</Excluded>
+                    <ValidationUpdateNumber>-1</ValidationUpdateNumber>
+                </PrivateBucketSet>
+                <SharedBucketSet>ExamConclusion</SharedBucketSet>
+            </Dimension>
+            <Dimension id="L}259">
+                <Value>patient.clinicalData.otherSecondaryInfection</Value>
+                <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{clinicalData}`.`J}org.bacteriemia.Patient$ClinicalData.{otherSecondaryInfection}`</ResolvedValue>
+                <IsConstant>false</IsConstant>
+                <ParameterID>B}nil</ParameterID>
+                <Customizable>false</Customizable>
+                <DimensionNode id="L}260">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2d</BucketIDTable>
+                    <ParentDimensionNode>L}256</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>TRUE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}286">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2c</BucketIDTable>
+                    <ParentDimensionNode>L}256</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>FALSE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}275">
+                    <BucketIDTable></BucketIDTable>
+                    <ParentDimensionNode>L}274</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>-</Values>
+                </DimensionNode>
+                <DimensionNode id="L}264">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2d</BucketIDTable>
+                    <ParentDimensionNode>L}263</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>TRUE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}294">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2c</BucketIDTable>
+                    <ParentDimensionNode>L}263</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>FALSE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}281">
+                    <BucketIDTable></BucketIDTable>
+                    <ParentDimensionNode>L}280</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>-</Values>
+                </DimensionNode>
+                <DimensionNode id="L}272">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2d</BucketIDTable>
+                    <ParentDimensionNode>L}271</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>TRUE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}298">
+                    <BucketIDTable>G}6c79b6e7:133ad284d5f:-7c2c</BucketIDTable>
+                    <ParentDimensionNode>L}271</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>FALSE</Values>
+                </DimensionNode>
+                <DimensionNode id="L}284">
+                    <BucketIDTable></BucketIDTable>
+                    <ParentDimensionNode>L}283</ParentDimensionNode>
+                    <ChildDimensionNodes></ChildDimensionNodes>
+                    <Values>-</Values>
+                </DimensionNode>
+                <IDofSharedBucketSet>G}6c79b6e7:133ad284d5f:-7c2f</IDofSharedBucketSet>
+                <PrivateBucketSet id="G}6c79b6e7:133ad284d5f:-7bfb">
+                    <Visible>true</Visible>
+                    <CreationUpdateNumber>60</CreationUpdateNumber>
+                    <IDofType>B}nil</IDofType>
+                    <ListContentID>B}nil</ListContentID>
+                    <Form>Default</Form>
+                    <CalendarForm>Date</CalendarForm>
+                    <Excluded>false</Excluded>
+                    <ValidationUpdateNumber>-1</ValidationUpdateNumber>
+                </PrivateBucketSet>
+                <SharedBucketSet>BooleanStr</SharedBucketSet>
+            </Dimension>
+            <DTAction id="L}326">
+                <Form>Modify</Form>
+                <Target>patient</Target>
+                <ResolvedTarget>`L}235`</ResolvedTarget>
+                <Expression id="L}338">
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>admissionDate</ParameterAlias>
+                    <ParameterID>J}org.bacteriemia.Patient.{admissionDate}</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Expression id="L}339">
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>clinicalData</ParameterAlias>
+                    <ParameterID>J}org.bacteriemia.Patient.{clinicalData}</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Expression id="L}340">
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>conclusion</ParameterAlias>
+                    <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                    <DTActionParameterName>conclusion</DTActionParameterName>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <Expression id="L}341">
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>name</ParameterAlias>
+                    <ParameterID>J}org.bacteriemia.Patient.{name}</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <DTActionNode id="L}327">
+                    <Selected>true</Selected>
+                    <Expression id="L}342">
+                        <Value>FinalConclusion.SECONDARY_BACTEREMIA</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.SECONDARY_BACTEREMIA`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}328">
+                    <Selected>true</Selected>
+                    <Expression id="L}343">
+                        <Value>FinalConclusion.BRC</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.BRC`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}329">
+                    <Selected>true</Selected>
+                    <Expression id="L}344">
+                        <Value>FinalConclusion.NO_INFECTION</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.NO_INFECTION`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}330">
+                    <Selected>true</Selected>
+                    <Expression id="L}345">
+                        <Value>FinalConclusion.SECONDARY_BACTEREMIA</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.SECONDARY_BACTEREMIA`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}331">
+                    <Selected>true</Selected>
+                    <Expression id="L}346">
+                        <Value>FinalConclusion.BRC</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.BRC`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}332">
+                    <Selected>true</Selected>
+                    <Expression id="L}347">
+                        <Value>FinalConclusion.NO_INFECTION</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.NO_INFECTION`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}334">
+                    <Selected>true</Selected>
+                    <Expression id="L}349">
+                        <Value>FinalConclusion.SECONDARY_BACTEREMIA</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.SECONDARY_BACTEREMIA`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}335">
+                    <Selected>true</Selected>
+                    <Expression id="L}350">
+                        <Value>FinalConclusion.PRIMARY_BACTEREMIA</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.PRIMARY_BACTEREMIA`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}336">
+                    <Selected>true</Selected>
+                    <Expression id="L}351">
+                        <Value>FinalConclusion.NO_INFECTION</Value>
+                        <ResolvedValue>`G}6c79b6e7:133ad284d5f:-7c23`.`J}public static final org.bacteriemia.FinalConclusion org.bacteriemia.FinalConclusion.NO_INFECTION`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>conclusion</ParameterAlias>
+                        <ParameterID>J}org.bacteriemia.Patient.{conclusion}</ParameterID>
+                        <DTActionParameterName>conclusion</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <AlwaysSelected>false</AlwaysSelected>
+            </DTAction>
+            <DTAction id="L}363">
+                <Form>Call</Form>
+                <Target>print</Target>
+                <ResolvedTarget>`B}function.println`</ResolvedTarget>
+                <Expression id="L}373">
+                    <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                    <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                    <IsConstant>false</IsConstant>
+                    <ParameterAlias>message</ParameterAlias>
+                    <ParameterID>B}function.println_message</ParameterID>
+                    <DTActionParameterName>message</DTActionParameterName>
+                    <Customizable>false</Customizable>
+                </Expression>
+                <DTActionNode id="L}364">
+                    <Selected>true</Selected>
+                    <Expression id="L}374">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}365">
+                    <Selected>true</Selected>
+                    <Expression id="L}375">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}366">
+                    <Selected>true</Selected>
+                    <Expression id="L}376">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}367">
+                    <Selected>true</Selected>
+                    <Expression id="L}377">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}368">
+                    <Selected>true</Selected>
+                    <Expression id="L}378">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}369">
+                    <Selected>true</Selected>
+                    <Expression id="L}379">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}370">
+                    <Selected>true</Selected>
+                    <Expression id="L}380">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}371">
+                    <Selected>true</Selected>
+                    <Expression id="L}381">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <DTActionNode id="L}372">
+                    <Selected>true</Selected>
+                    <Expression id="L}382">
+                        <Value>patient.name + &quot;:&quot; + patient.conclusion</Value>
+                        <ResolvedValue>`L}235`.`J}org.bacteriemia.Patient.{name}` + &quot;:&quot; + `L}235`.`J}org.bacteriemia.Patient.{conclusion}`</ResolvedValue>
+                        <IsConstant>false</IsConstant>
+                        <ParameterAlias>message</ParameterAlias>
+                        <ParameterID>B}function.println_message</ParameterID>
+                        <DTActionParameterName>message</DTActionParameterName>
+                        <Customizable>false</Customizable>
+                    </Expression>
+                </DTActionNode>
+                <AlwaysSelected>false</AlwaysSelected>
+            </DTAction>
+            <DTRule id="L}234">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>44</CreationUpdateNumber>
+            </DTRule>
+            <DTRule id="L}287">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>63</CreationUpdateNumber>
+            </DTRule>
+            <DTRule id="L}276">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>63</CreationUpdateNumber>
+            </DTRule>
+            <DTRule id="L}265">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>63</CreationUpdateNumber>
+            </DTRule>
+            <DTRule id="L}295">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>63</CreationUpdateNumber>
+            </DTRule>
+            <DTRule id="L}282">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>63</CreationUpdateNumber>
+            </DTRule>
+            <DTRule id="L}273">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>63</CreationUpdateNumber>
+            </DTRule>
+            <DTRule id="L}299">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>63</CreationUpdateNumber>
+            </DTRule>
+            <DTRule id="L}285">
+                <Override></Override>
+                <RunBefore></RunBefore>
+                <NoConflict></NoConflict>
+                <OverriddenBy></OverriddenBy>
+                <RunAfter></RunAfter>
+                <CreationUpdateNumber>63</CreationUpdateNumber>
+            </DTRule>
+            <AllowGaps>true</AllowGaps>
+            <ConflictPolicy>manual</ConflictPolicy>
+        </RuleSheet>
+        <VisibilityFilterEnabled>false</VisibilityFilterEnabled>
+        <CreationUpdateNumber>4</CreationUpdateNumber>
+    </RuleSet>
+    <IDcounter>389</IDcounter>
+    <ValidationUpdateNumber>104</ValidationUpdateNumber>
+    <UpdateNumber>104</UpdateNumber>
+</RuleDictionary>
