@@ -1,5 +1,7 @@
 package xmlfacts;
 
+import java.beans.XMLEncoder;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,6 +34,7 @@ import javax.swing.JOptionPane;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.MarshalException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
@@ -51,6 +54,7 @@ import oracle.xml.parser.v2.NSResolver;
 import oracle.xml.parser.v2.XMLDocument;
 import oracle.xml.parser.v2.XMLElement;
 
+import org.w3c.dom.Comment;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -68,7 +72,6 @@ public class AssertXMLFact
   private final static String DESTINATION_SRC_DIRECTORY = "";
   private final static String DESTINATION_PACKAGE       = ""; // Based on the Schema name..., 
   private final static String DESTINATION_CLASSES_DIRECTORY = "";
-//private final static String JAXB_COMPILER_JARS = "";
   private final static String FACTS_OUTPUT_DIRECTORY = ".";
   
   private static String repositoryPath              = REPOSITORY_PATH;
@@ -78,7 +81,6 @@ public class AssertXMLFact
   private static String destinationSrcDirectory     = DESTINATION_SRC_DIRECTORY;
   private static String destinationPackage          = DESTINATION_PACKAGE;
   private static String destinationClassesDirectory = DESTINATION_CLASSES_DIRECTORY;
-//private static String jaxbCompilerJars            = JAXB_COMPILER_JARS;
   private static String factsOutput                 = FACTS_OUTPUT_DIRECTORY;
   
   private static boolean verbose = true;
@@ -372,9 +374,12 @@ public class AssertXMLFact
               rulesOutput = new PrintWriter(System.out);
             session.setOutputWriter(rulesOutput);                  
                       
+            elapsedTimeString += "-- executeRuleset --\n";
+            long beforeExecuteRuleset =
             before = System.currentTimeMillis();
             session.executeRuleset(dmrl); // Parameter is the rules generated code.
-            
+            after =  System.currentTimeMillis();
+            elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
 //          for (String str : rulesSets)
 //            session.setRulesetName(str);
             
@@ -382,9 +387,13 @@ public class AssertXMLFact
             for (String codeLine : rsrl)
             {
               retRulesCode += (codeLine + "\n");
+              before = System.currentTimeMillis();
               session.executeRuleset(codeLine);
+              after =  System.currentTimeMillis();
+              elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
             }
             after =  System.currentTimeMillis();
+            elapsedTimeString += "--------------------\nTotal:" + Long.toString(after - beforeExecuteRuleset) + " ms.\n";
 
             if (System.getProperty("display.msg", "false").equals("true")) 
             {
@@ -395,7 +404,7 @@ public class AssertXMLFact
                 System.out.println("Ruleset: " + msr.get(s).getName());
               System.out.println("-----------------------------");
             }
-            elapsedTimeString += "RL executed\tin " + Long.toString(after - before) + " ms.\n";
+//          elapsedTimeString += "RL executed\tin " + Long.toString(after - before) + " ms.\n";
             if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ RL executed in " + Long.toString(after - before) + " ms. ]]");
             if (verbose)
             {
@@ -439,7 +448,6 @@ public class AssertXMLFact
               try
               {
                 Object unmarshalled = um.unmarshal((Node)fact);
-                
                 if (unmarshalled instanceof JAXBElement) // 01-Jul-2008
                 {
                   JAXBElement jaxbElement = (JAXBElement)unmarshalled;
@@ -447,7 +455,25 @@ public class AssertXMLFact
     //            System.out.println("Unmarshalling returned a [" + c.getName() + "]");
                   unmarshalled = jaxbElement.getValue();
                 }
-                if (verbose) System.out.println("Unmarshalling returned a [" + unmarshalled.getClass().getName() + "]");      
+                if (verbose) 
+                  System.out.println("Unmarshalling returned a [" + unmarshalled.getClass().getName() + "]");      
+                // Destination Package?
+                if (destinationPackage.trim().length() == 0)
+                {
+                  String className = unmarshalled.getClass().getName();
+                  String packName  = className.substring(0, className.lastIndexOf("."));
+                  String objFact   = packName + ".ObjectFactory";
+                  try
+                  {
+                    Class ofClass = Class.forName(objFact);
+                    destinationPackage = packName;
+                  }
+                  catch (ClassNotFoundException cnfe)
+                  {
+                    
+                  }
+                }
+                
                 // Temp, for tests
                 if (false && unmarshalled.getClass().getName().equals("org.dyndf.Input"))
                 {
@@ -523,28 +549,54 @@ public class AssertXMLFact
             Iterator<Object> iterator = session.getFactObjects();
             while (iterator.hasNext())
             {
-              Object fact = iterator.next();
-              
-              if (verbose) dumpFact(fact);
-              
+              boolean javaDump = false;
+              Object fact = iterator.next();              
+              if (verbose) 
+                dumpFact(fact);              
               try
               {
                 OutputStream baos = new ByteArrayOutputStream();              
                 try
                 {
-    //            ObjectFactory of = new ObjectFactory();
-                  Class ofClass = Class.forName(destinationPackage + ".ObjectFactory");
-                  Object of = ofClass.newInstance();
-    //              System.out.println("We have a " + of.getClass().getName());
-                  String className = fact.getClass().getName();
-    //              System.out.println("Fact is a " + className);
-                  String methodName = "create" + className.substring(className.lastIndexOf(".") + 1);
-                  Method method = of.getClass().getMethod(methodName, new Class[] { fact.getClass() });
-                  Object o = method.invoke(of, new Object[] { fact });
-                  m.marshal(o, baos);
+                  try
+                  {
+                    m.marshal(fact, baos);                    
+                  }
+                  catch (Exception ex)
+                  {
+      //            ObjectFactory of = new ObjectFactory();
+                    Class ofClass = Class.forName(destinationPackage + ".ObjectFactory");
+                    Object of = ofClass.newInstance();
+      //            System.out.println("We have a " + of.getClass().getName());
+                    String className = fact.getClass().getName();
+      //            System.out.println("Fact is a " + className);
+                    String methodName = "create" + className.substring(className.lastIndexOf(".") + 1);
+  //                Method method = of.getClass().getMethod(methodName, new Class[] { fact.getClass() });
+                    Method method = of.getClass().getMethod(methodName, (Class<?>[])null);
+  //                Object o = method.invoke(of, new Object[] { fact });
+                    Object o = method.invoke(of, null);
+                    try { m.marshal(o, baos); }
+                    catch (MarshalException e)
+                    {
+                      System.err.println("MarshalException:");
+                      e.printStackTrace();
+                      javaDump = true;
+                      XMLEncoder encoder = new XMLEncoder(baos);
+                      encoder.writeObject(fact);
+                      encoder.close();
+                    }
+                  }
                 }
                 catch (Exception ex2)
                 {
+                  if (verbose && ex2 instanceof ClassNotFoundException)
+                  {
+                    System.err.println("Class Not Found [" + destinationPackage + ".ObjectFactory" + "]");
+                  }
+                  if (verbose && ex2 instanceof NoSuchMethodException)
+                  {
+                    System.err.println("Not such method...");
+                  }
                // System.out.println(ex2.toString());
                   if (fact instanceof oracle.rules.rl.session.Link)
                     ; // Skip
@@ -556,7 +608,7 @@ public class AssertXMLFact
                     }
                     catch (Exception ex3)
                     {
-                      if (System.getProperty("display.msg", "false").equals("true"))
+                      if (verbose || System.getProperty("display.msg", "false").equals("true"))
                       {
                         System.out.println(ex3.toString());
                         System.out.println("-- No way to display the " + fact.getClass().getName() + " --");
@@ -585,6 +637,12 @@ public class AssertXMLFact
                   parser.parse(new StringReader(strDoc));
                   XMLDocument doc = parser.getDocument();
                   XMLElement root = (XMLElement)doc.getDocumentElement();
+                  if (javaDump)
+                  {
+                    Comment comment = doc.createComment("comment");
+                    comment.setData("Impossible to marshal [" + fact.getClass().getName() + "], consider reworking your schema (use elements instead of types...)");
+                    root.appendChild(comment);
+                  }
                   
                   ByteArrayOutputStream baos4all = new ByteArrayOutputStream();
                   root.print(baos4all);
