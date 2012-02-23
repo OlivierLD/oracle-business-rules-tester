@@ -43,6 +43,9 @@ import oracle.rules.rl.RLObject;
 import oracle.rules.rl.RLProperty;
 import oracle.rules.rl.RuleSession;
 import oracle.rules.rl.Ruleset;
+import oracle.rules.rl.exceptions.RLException;
+import oracle.rules.rl.extensions.pool.PoolableObject;
+import oracle.rules.rl.extensions.pool.RuleSessionPool;
 import oracle.rules.sdk2.decisionpoint.DecisionPointDictionaryFinder;
 import oracle.rules.sdk2.dictionary.DOID;
 import oracle.rules.sdk2.dictionary.RuleDictionary;
@@ -89,6 +92,13 @@ public class AssertXMLFact
   private static DOMParser parser = new DOMParser();
   
   private static String elapsedTimeString = "";
+  private static RuleSessionPool pool = null;
+  private static ArrayList<String> rulesSets = null;
+  private static RuleSession session = null;
+  private static PoolableObject<RuleSession> po = null;
+  
+  private static boolean invalidateRulesSession = true;
+  private static boolean forceInvalidate = false;
 
   private final static void getPrms(String[] prms, boolean print)
   {
@@ -210,7 +220,8 @@ public class AssertXMLFact
     long before = System.currentTimeMillis(), after = 0L;
 
     use_assert_tree = (System.getProperty("use.assert.tree", "false").equals("true"));
-    ArrayList<String> rulesSets = new ArrayList<String>(1);
+    if (rulesSets == null || invalidateRulesSession)
+      rulesSets = new ArrayList<String>(1);
 
     getPrms(args, System.getProperty("display.msg", "false").equals("true"));
     try
@@ -231,6 +242,12 @@ public class AssertXMLFact
                                                          verbose, 
                                                          DynamicCompilationV2.CREATE_JAR_FILE);    
       ArrayList<String> pl = dc.generate();
+      invalidateRulesSession = !dc.isAlreadyCompiled();
+      if (forceInvalidate)
+      {
+        invalidateRulesSession = true;
+        forceInvalidate = false; // Reset
+      }
       String clsName = pl.get(0) + ".ObjectFactory";
       try
       {
@@ -244,7 +261,8 @@ public class AssertXMLFact
         System.out.println("------------------------------");
       }
       after =  System.currentTimeMillis();
-      elapsedTimeString += "Schema compiled\tin " + Long.toString(after - before) + " ms.\n";
+      if (!dc.isAlreadyCompiled())
+        elapsedTimeString += "Schema compiled\tin " + Long.toString(after - before) + " ms.\n";
       if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Schema compiled in " + Long.toString(after - before) + " ms. ]]");
       // Load the XML Instance
       String jaxbCtxPackName = "";
@@ -266,7 +284,7 @@ public class AssertXMLFact
         parser.parse(instanceDoc);
         XMLDocument factCollection = parser.getDocument();
         after =  System.currentTimeMillis();
-        elapsedTimeString += "Document parsed\tin " + Long.toString(after - before) + " ms.\n";
+        elapsedTimeString += "Input Document parsed\tin " + Long.toString(after - before) + " ms.\n";
         if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Document parsed in " + Long.toString(after - before) + " ms. ]]");
         
   //      System.out.println(System.getProperty("java.class.path"));
@@ -274,394 +292,433 @@ public class AssertXMLFact
         String dmrl = null;
         ArrayList<String> rsrl = new ArrayList<String>();
 
-        // load dictionary  
-        RuleDictionary dict = null;
-        Reader reader = null;
-        boolean ok2go = true;
-        try
+        if (pool == null || invalidateRulesSession)
         {
-          if (verbose) System.out.println("Reading Rules Repository:" + new File(repositoryPath).getCanonicalPath());
-          before = System.currentTimeMillis();
-          reader = new FileReader(new File(repositoryPath));
-          dict = RuleDictionary.readDictionary(reader, new DecisionPointDictionaryFinder(null)); // TASK See other flavors, if any.
-          // validate dictionary
-          List<SDKWarning> warnings = new ArrayList<SDKWarning>();
-          dict.update(warnings);
-          after =  System.currentTimeMillis();
-          elapsedTimeString += ("Dictionary read\tin " + Long.toString(after - before) + " ms.\n");
-          if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Dictionary read  in " + Long.toString(after - before) + " ms. ]]");
-
-          // RL can only be generated if the dictionary is valid
-          if (warnings.size() > 0)
-          {
-            String str = "Validation warnings:\n" + warnings;
-            System.out.println(str);
-            JOptionPane.showMessageDialog(null, str, "RL Warnings", JOptionPane.ERROR_MESSAGE);
-            ok2go = false;
-            throw new RuntimeException(Integer.toString(warnings.size()) + " RL Warning(s).");
-          }
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace();
-          ok2go = false;
-        }
-        finally
-        {
-          if (reader != null)
-          {
-            try
-            {
-              reader.close();
-            }
-            catch (IOException ioe)
-            {
-              ioe.printStackTrace();
-            }
-          }
-        }
-        
-        if (ok2go)
-        {
+          // load dictionary  
+          RuleDictionary dict = null;
+          Reader reader = null;
+          boolean ok2go = true;
           try
           {
-            // generate RL code
+            if (verbose) System.out.println("Reading Rules Repository:" + new File(repositoryPath).getCanonicalPath());
             before = System.currentTimeMillis();
-            dmrl = dict.dataModelRL();
-          
+            reader = new FileReader(new File(repositoryPath));
+            dict = RuleDictionary.readDictionary(reader, new DecisionPointDictionaryFinder(null)); // TASK See other flavors, if any.
+            // validate dictionary
+            List<SDKWarning> warnings = new ArrayList<SDKWarning>();
+            dict.update(warnings);
             after =  System.currentTimeMillis();
-            elapsedTimeString += "RL Generated\tin " + Long.toString(after - before) + " ms.\n";
-            if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ RL Generated in " + Long.toString(after - before) + " ms. ]]");
-            StringTokenizer strtok = new StringTokenizer(ruleSetName, ",");
-            while (strtok.hasMoreTokens())
+            elapsedTimeString += ("Dictionary read\tin " + Long.toString(after - before) + " ms.\n");
+            if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Dictionary read  in " + Long.toString(after - before) + " ms. ]]");
+  
+            // RL can only be generated if the dictionary is valid
+            if (warnings.size() > 0)
             {
-              String rs = strtok.nextToken().trim();
-              if (System.getProperty("display.msg", "false").equals("true")) System.out.println("Adding RuleSet [" + rs + "]");
-              rulesSets.add(rs);
+              String str = "Validation warnings:\n" + warnings;
+              System.out.println(str);
+              JOptionPane.showMessageDialog(null, str, "RL Warnings", JOptionPane.ERROR_MESSAGE);
+              ok2go = false;
+              throw new RuntimeException(Integer.toString(warnings.size()) + " RL Warning(s).");
             }
-            for (String str : rulesSets)
-              rsrl.add(dict.ruleSetRL(str));
           }
           catch (Exception e)
           {
-            System.err.println("Reading the Dictionnary...");
-            JOptionPane.showMessageDialog(null, e.toString(), "Oops", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
+            ok2go = false;
           }
-  
-          // A test
-          if (false)
+          finally
           {
-            DictionarySearch ds = new DictionarySearch(dict);
-            List<DOID> searchResult = ds.find("DENIED");
-            System.out.println("Search returns " + searchResult.size() + " entry(ies).");
-            for (DOID doid: searchResult)
+            if (reader != null)
             {
-              dumpDoid(doid);
+              try
+              {
+                reader.close();
+              }
+              catch (IOException ioe)
+              {
+                ioe.printStackTrace();
+              }
             }
           }
-  
-          try
+          
+          if (ok2go)
           {
-            // init a rule session
-            before = System.currentTimeMillis();
-            RuleSession session = new RuleSession();
-            after =  System.currentTimeMillis();
-            elapsedTimeString += "Session created\tin " + Long.toString(after - before) + " ms.\n";
-            if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Session created in " + Long.toString(after - before) + " ms. ]]");
-//          StringTokenizer strtok = new StringTokenizer(ruleSetName, ",");
-            if (rulesOutput == null)
-              rulesOutput = new PrintWriter(System.out);
-            session.setOutputWriter(rulesOutput);                  
-                      
-            elapsedTimeString += "-- executeRuleset --\n";
-            long beforeExecuteRuleset =
-            before = System.currentTimeMillis();
-            session.executeRuleset(dmrl); // Parameter is the rules generated code.
-            after =  System.currentTimeMillis();
-            elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
-//          for (String str : rulesSets)
-//            session.setRulesetName(str);
-            
-            retRulesCode = dmrl + "\n";
-            for (String codeLine : rsrl)
+            try
             {
-              retRulesCode += (codeLine + "\n");
+              // generate RL code
               before = System.currentTimeMillis();
-              session.executeRuleset(codeLine);
+              dmrl = dict.dataModelRL();          
+              after =  System.currentTimeMillis();
+              elapsedTimeString += "RL Generated\tin " + Long.toString(after - before) + " ms.\n";
+              if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ RL Generated in " + Long.toString(after - before) + " ms. ]]");
+              StringTokenizer strtok = new StringTokenizer(ruleSetName, ",");
+              while (strtok.hasMoreTokens())
+              {
+                String rs = strtok.nextToken().trim();
+                if (System.getProperty("display.msg", "false").equals("true")) System.out.println("Adding RuleSet [" + rs + "]");
+                rulesSets.add(rs);
+              }
+              for (String str : rulesSets)
+                rsrl.add(dict.ruleSetRL(str));
+            }
+            catch (Exception e)
+            {
+              System.err.println("Reading the Dictionnary...");
+              JOptionPane.showMessageDialog(null, e.toString(), "Oops", JOptionPane.ERROR_MESSAGE);
+              e.printStackTrace();
+            }
+    
+            // A test
+            if (false)
+            {
+              DictionarySearch ds = new DictionarySearch(dict);
+              List<DOID> searchResult = ds.find("DENIED");
+              System.out.println("Search returns " + searchResult.size() + " entry(ies).");
+              for (DOID doid: searchResult)
+              {
+                dumpDoid(doid);
+              }
+            }
+            pool = new RuleSessionPool(rsrl);            
+            System.out.println("Pool contains " + pool.getInuse() + " session(s) in use");
+    
+            try
+            {
+              // init a rule session
+              before = System.currentTimeMillis();
+              session = new RuleSession();
+              invalidateRulesSession = false;
+              after =  System.currentTimeMillis();
+              elapsedTimeString += "Session created\tin " + Long.toString(after - before) + " ms.\n";
+              if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Session created in " + Long.toString(after - before) + " ms. ]]");
+  //          StringTokenizer strtok = new StringTokenizer(ruleSetName, ",");
+              if (rulesOutput == null)
+                rulesOutput = new PrintWriter(System.out);
+              session.setOutputWriter(rulesOutput);                  
+                        
+              elapsedTimeString += "-- executeRuleset --\n";
+              long beforeExecuteRuleset =
+              before = System.currentTimeMillis();
+              session.executeRuleset(dmrl); // Parameter is the rules generated code.
               after =  System.currentTimeMillis();
               elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
-            }
-            after =  System.currentTimeMillis();
-            elapsedTimeString += "--------------------\nTotal:" + Long.toString(after - beforeExecuteRuleset) + " ms.\n";
-
-            if (System.getProperty("display.msg", "false").equals("true")) 
-            {
-              System.out.println("-- Rulesets in the session --");
-              Map<String, Ruleset> msr = session.getRulesets();
-              Set<String> k = msr.keySet();
-              for (String s : k)
-                System.out.println("Ruleset: " + msr.get(s).getName());
-              System.out.println("-----------------------------");
-            }
-//          elapsedTimeString += "RL executed\tin " + Long.toString(after - before) + " ms.\n";
-            if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ RL executed in " + Long.toString(after - before) + " ms. ]]");
-            if (verbose)
-            {
-              // Print out RL code
-              System.out.println("Rules Code:");
-              System.out.println("-----------------------");
-              System.out.println(retRulesCode);
-              System.out.println("-----------------------");
-            }
-  
-            NodeList facts = factCollection.selectNodes("fact:unit-testing-facts/fact:fact", new NSResolver()
-                                                        {
-                                                          public String resolveNamespacePrefix(String prefix) 
-                                                          {
-                                                            return "urn:rules-unit";
-                                                          }
-                                                        });
-            if (verbose) System.out.println(Integer.toString(facts.getLength()) + " fact(s) to assert.");
-            before = System.currentTimeMillis();
-            long bigBefore = before;
-            for (int i=0; i<facts.getLength(); i++)
-            {
-              if (verbose) System.out.println("============ Fact ===========");
-              // Look for the first child Element (not Text)
-              NodeList nl = facts.item(i).getChildNodes();
-              Node fact = null;
-              for (int j=0; j<nl.getLength(); j++)
+  //          for (String str : rulesSets)
+  //            session.setRulesetName(str);
+              
+              retRulesCode = dmrl + "\n";
+              for (String codeLine : rsrl)
               {
-                Node n = nl.item(j);
-                if (n.getNodeType() == Node.ELEMENT_NODE)
-                {
-                  fact = n;
-                  break;
-                }
-              }
-              if (verbose) 
-              {
-                System.out.println("== Extracted Fact: ==");
-                ((XMLElement)fact).print(System.out);
-              }
-              try
-              {
-                Object unmarshalled = um.unmarshal((Node)fact);
-                if (unmarshalled instanceof JAXBElement) // 01-Jul-2008
-                {
-                  JAXBElement jaxbElement = (JAXBElement)unmarshalled;
-    //            Class c = jaxbElement.getDeclaredType();
-    //            System.out.println("Unmarshalling returned a [" + c.getName() + "]");
-                  unmarshalled = jaxbElement.getValue();
-                }
-                if (verbose) 
-                  System.out.println("Unmarshalling returned a [" + unmarshalled.getClass().getName() + "]");      
-                // Destination Package?
-                if (destinationPackage.trim().length() == 0)
-                {
-                  String className = unmarshalled.getClass().getName();
-                  String packName  = className.substring(0, className.lastIndexOf("."));
-                  String objFact   = packName + ".ObjectFactory";
-                  try
-                  {
-                    Class ofClass = Class.forName(objFact);
-                    destinationPackage = packName;
-                  }
-                  catch (ClassNotFoundException cnfe)
-                  {
-                    
-                  }
-                }
-                
-                // Temp, for tests
-                if (false && unmarshalled.getClass().getName().equals("org.dyndf.Input"))
-                {
-                  System.out.println("========= DF, for tests ============================");
-                  String df = "mar23_02.OBR_DynDecisionFunction.DecisionFunction";
-                  System.out.println("Executing Decision Function [" + df +"]");
-                  Object prm = unmarshalled;
-                  List result = (List)session.callFunctionWithArgument(df, prm);
-                  System.out.println("DF Executed.");
-                  System.out.println("Returned a list of " + result.size() + " element(s).");
-                  for (Object o : result)
-                    System.out.println("- We have a " + o.getClass().getName());
-                  System.out.println("============= End of Test =========================");
-                }
-                if (verbose) System.out.print("Now asserting fact...");
+                retRulesCode += (codeLine + "\n");
                 before = System.currentTimeMillis();
-                session.callFunctionWithArgument((use_assert_tree?"assertTree":"assert"), unmarshalled); 
+                session.executeRuleset(codeLine);
                 after =  System.currentTimeMillis();
-                elapsedTimeString += "  - 1 fact asserted\tin " + Long.toString(after - bigBefore) + " ms.\n";
-                if (verbose) System.out.println("...Fact " + (use_assert_tree?"(tree)":"") + "asserted");
+                elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
               }
-              catch (Exception wow)
-              {
-                System.out.println("===============");
-                System.out.println(wow.getMessage());
-                System.out.println("===============");
-                wow.printStackTrace();
-              }
+              after =  System.currentTimeMillis();
+              elapsedTimeString += "--------------------\nTotal:" + Long.toString(after - beforeExecuteRuleset) + " ms.\n";
             }
-            after =  System.currentTimeMillis();
-            elapsedTimeString += "Facts asserted\tin " + Long.toString(after - bigBefore) + " ms.\n";
-            if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Facts asserted in " + Long.toString(after - bigBefore) + " ms. ]]");
-            
-            if (verbose)
+            catch (Exception ex)
             {
-              session.callFunction("showFacts");
-              session.callFunction("showActivations");
-              session.callFunction("watchFacts");
-              session.callFunction("watchRules");
-              session.callFunction("watchActivations");
+              System.err.println(ex.getLocalizedMessage());
             }
-            // Running Rulesets here
-            before = System.currentTimeMillis();
-            for (String rs : rulesSets)
-            {
-              if (verbose) System.out.println("================================================================");
-              if (verbose) System.out.println("Now running " + rs);
-              long beforeRS = System.currentTimeMillis();
-              session.callFunctionWithArgument("run", rs); // Here is the execution of the ruleset
-              long afterRS = System.currentTimeMillis();
-              elapsedTimeString += "- Ruleset [" + rs + "] executed\tin " + Long.toString(afterRS - beforeRS) + " ms.\n";
-            }          
-            after =  System.currentTimeMillis();
-            elapsedTimeString += "Ruleset(s) executed\tin " + Long.toString(after - before) + " ms.\n";
-            if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Ruleset(s) executed in " + Long.toString(after - before) + " ms. ]]");
-            
-            if (verbose) System.out.println("================================================================");
+          }
+        }
+        else
+        {
+          // From the pool
+          System.out.println("-> Pool now contains " + pool.getInuse() + " session(s) in use");
+          po = pool.getPoolableRuleSession();
+//        session = po.getPooledObject(); // FIXME How to put the session in the pool?
+          System.out.println(" ... now " + pool.getInuse() + " session(s) in use");
+          System.out.println("-- Rulesets in the session --");
+          Map<String, Ruleset> msr = session.getRulesets();
+          Set<String> k = msr.keySet();
+          for (String s : k)
+            System.out.println("Ruleset: " + msr.get(s).getName());
+          System.out.println("-----------------------------");
+        }
+          
+        try
+        {
+          if (System.getProperty("display.msg", "false").equals("true")) 
+          {
+            System.out.println("-- Rulesets in the session --");
+            Map<String, Ruleset> msr = session.getRulesets();
+            Set<String> k = msr.keySet();
+            for (String s : k)
+              System.out.println("Ruleset: " + msr.get(s).getName());
+            System.out.println("-----------------------------");
+          }
+//          elapsedTimeString += "RL executed\tin " + Long.toString(after - before) + " ms.\n";
+          if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ RL executed in " + Long.toString(after - before) + " ms. ]]");
+          if (verbose)
+          {
+            // Print out RL code
+            System.out.println("Rules Code:");
+            System.out.println("-----------------------");
+            System.out.println(retRulesCode);
+            System.out.println("-----------------------");
+          }
 
-            if (verbose)
-              session.callFunction("showFacts");          
-  
-            if (verbose) System.out.println("Now retrieving facts");
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.valueOf(true));
-            int factIndex = 1;
-            NumberFormat nf = new DecimalFormat("0000");
-            File outputDir = new File(factsOutput);
-            if (!outputDir.exists())
-              outputDir.mkdirs();
-            BufferedWriter allfacts = new BufferedWriter(new FileWriter(factsOutput + File.separator + "allfacts.xml"));
-            allfacts.write("<?xml version='1.0'?>\n");
-            allfacts.write("<all-facts xmlns='urn:rules-unit'>\n");
-            Iterator<Object> iterator = session.getFactObjects();
-            while (iterator.hasNext())
+          NodeList facts = factCollection.selectNodes("fact:unit-testing-facts/fact:fact", new NSResolver()
+                                                      {
+                                                        public String resolveNamespacePrefix(String prefix) 
+                                                        {
+                                                          return "urn:rules-unit";
+                                                        }
+                                                      });
+          if (verbose) System.out.println(Integer.toString(facts.getLength()) + " fact(s) to assert.");
+          before = System.currentTimeMillis();
+          long bigBefore = before;
+          for (int i=0; i<facts.getLength(); i++)
+          {
+            if (verbose) System.out.println("============ Fact ===========");
+            // Look for the first child Element (not Text)
+            NodeList nl = facts.item(i).getChildNodes();
+            Node fact = null;
+            for (int j=0; j<nl.getLength(); j++)
             {
-              boolean javaDump = false;
-              Object fact = iterator.next();              
-              if (verbose) 
-                dumpFact(fact);              
-              try
+              Node n = nl.item(j);
+              if (n.getNodeType() == Node.ELEMENT_NODE)
               {
-                OutputStream baos = new ByteArrayOutputStream();              
+                fact = n;
+                break;
+              }
+            }
+            if (verbose) 
+            {
+              System.out.println("== Extracted Fact: ==");
+              ((XMLElement)fact).print(System.out);
+            }
+            try
+            {
+              Object unmarshalled = um.unmarshal((Node)fact);
+              if (unmarshalled instanceof JAXBElement) // 01-Jul-2008
+              {
+                JAXBElement jaxbElement = (JAXBElement)unmarshalled;
+  //            Class c = jaxbElement.getDeclaredType();
+  //            System.out.println("Unmarshalling returned a [" + c.getName() + "]");
+                unmarshalled = jaxbElement.getValue();
+              }
+              if (verbose) 
+                System.out.println("Unmarshalling returned a [" + unmarshalled.getClass().getName() + "]");      
+              // Destination Package?
+              if (destinationPackage.trim().length() == 0)
+              {
+                String className = unmarshalled.getClass().getName();
+                String packName  = className.substring(0, className.lastIndexOf("."));
+                String objFact   = packName + ".ObjectFactory";
                 try
                 {
+                  Class ofClass = Class.forName(objFact);
+                  destinationPackage = packName;
+                }
+                catch (ClassNotFoundException cnfe)
+                {
+                  System.err.println(cnfe.getLocalizedMessage());
+                }
+              }
+              
+              // Temp, for tests
+              if (false && unmarshalled.getClass().getName().equals("org.dyndf.Input"))
+              {
+                System.out.println("========= DF, for tests ============================");
+                String df = "mar23_02.OBR_DynDecisionFunction.DecisionFunction";
+                System.out.println("Executing Decision Function [" + df +"]");
+                Object prm = unmarshalled;
+                List result = (List)session.callFunctionWithArgument(df, prm);
+                System.out.println("DF Executed.");
+                System.out.println("Returned a list of " + result.size() + " element(s).");
+                for (Object o : result)
+                  System.out.println("- We have a " + o.getClass().getName());
+                System.out.println("============= End of Test =========================");
+              }
+              if (verbose) System.out.print("Now asserting fact...");
+              before = System.currentTimeMillis();
+              session.callFunctionWithArgument((use_assert_tree?"assertTree":"assert"), unmarshalled); 
+              after =  System.currentTimeMillis();
+              elapsedTimeString += "  - 1 fact asserted\tin " + Long.toString(after - bigBefore) + " ms.\n";
+              if (verbose) System.out.println("...Fact " + (use_assert_tree?"(tree)":"") + "asserted");
+            }
+            catch (Exception wow)
+            {
+              System.out.println("===============");
+              System.out.println(wow.getMessage());
+              System.out.println("===============");
+              wow.printStackTrace();
+            }
+          }
+          after =  System.currentTimeMillis();
+          elapsedTimeString += "Facts asserted\tin " + Long.toString(after - bigBefore) + " ms.\n";
+          if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Facts asserted in " + Long.toString(after - bigBefore) + " ms. ]]");
+          
+          if (verbose)
+          {
+            session.callFunction("showFacts");
+            session.callFunction("showActivations");
+            session.callFunction("watchFacts");
+            session.callFunction("watchRules");
+            session.callFunction("watchActivations");
+          }
+          // Running Rulesets here
+          before = System.currentTimeMillis();
+          
+          if (rulesSets.size() == 0) // From the pool...
+          {
+            Map<String, Ruleset> mapRS = session.getRulesets();
+            for (String s : mapRS.keySet())
+            {
+              System.out.println("Getting RS [" + s + "] from the pool");
+              rulesSets.add(s);
+            }
+          }            
+          
+          for (String rs : rulesSets)
+          {
+            if (verbose) System.out.println("================================================================");
+            if (verbose) System.out.println("Now running " + rs);
+            long beforeRS = System.currentTimeMillis();
+            session.callFunctionWithArgument("run", rs); // Here is the execution of the ruleset
+            long afterRS = System.currentTimeMillis();
+            elapsedTimeString += "- Ruleset [" + rs + "] executed\tin " + Long.toString(afterRS - beforeRS) + " ms.\n";
+          }          
+          after =  System.currentTimeMillis();
+          elapsedTimeString += "Ruleset(s) executed\tin " + Long.toString(after - before) + " ms.\n";
+          if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Ruleset(s) executed in " + Long.toString(after - before) + " ms. ]]");
+          
+          if (verbose) System.out.println("================================================================");
+
+          if (verbose)
+            session.callFunction("showFacts");          
+
+          if (verbose) System.out.println("Now retrieving facts");
+          Marshaller m = context.createMarshaller();
+          m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.valueOf(true));
+          int factIndex = 1;
+          NumberFormat nf = new DecimalFormat("0000");
+          File outputDir = new File(factsOutput);
+          if (!outputDir.exists())
+            outputDir.mkdirs();
+          BufferedWriter allfacts = new BufferedWriter(new FileWriter(factsOutput + File.separator + "allfacts.xml"));
+          allfacts.write("<?xml version='1.0'?>\n");
+          allfacts.write("<all-facts xmlns='urn:rules-unit'>\n");
+          Iterator<Object> iterator = session.getFactObjects();
+          while (iterator.hasNext())
+          {
+            boolean javaDump = false;
+            Object fact = iterator.next();              
+            if (verbose) 
+              dumpFact(fact);              
+            try
+            {
+              OutputStream baos = new ByteArrayOutputStream();              
+              try
+              {
+                try
+                {
+                  m.marshal(fact, baos);                    
+                }
+                catch (Exception ex)
+                {
+    //            ObjectFactory of = new ObjectFactory();
+                  Class ofClass = Class.forName(destinationPackage + ".ObjectFactory");
+                  Object of = ofClass.newInstance();
+    //            System.out.println("We have a " + of.getClass().getName());
+                  String className = fact.getClass().getName();
+    //            System.out.println("Fact is a " + className);
+                  String methodName = "create" + className.substring(className.lastIndexOf(".") + 1);
+//                Method method = of.getClass().getMethod(methodName, new Class[] { fact.getClass() });
+                  Method method = of.getClass().getMethod(methodName, (Class<?>[])null);
+//                Object o = method.invoke(of, new Object[] { fact });
+                  Object o = method.invoke(of, null);
+                  try { m.marshal(o, baos); }
+                  catch (MarshalException e)
+                  {
+                    System.err.println("MarshalException:");
+                    e.printStackTrace();
+                    javaDump = true;
+                    XMLEncoder encoder = new XMLEncoder(baos);
+                    encoder.writeObject(fact);
+                    encoder.close();
+                  }
+                }
+              }
+              catch (Exception ex2)
+              {
+                if (verbose && ex2 instanceof ClassNotFoundException)
+                {
+                  System.err.println("Class Not Found [" + destinationPackage + ".ObjectFactory" + "]");
+                }
+                if (verbose && ex2 instanceof NoSuchMethodException)
+                {
+                  System.err.println("Not such method...");
+                }
+             // System.out.println(ex2.toString());
+                if (fact instanceof oracle.rules.rl.session.Link)
+                  ; // Skip
+                else
+                {  
                   try
                   {
-                    m.marshal(fact, baos);                    
+                    m.marshal(fact, baos);
                   }
-                  catch (Exception ex)
+                  catch (Exception ex3)
                   {
-      //            ObjectFactory of = new ObjectFactory();
-                    Class ofClass = Class.forName(destinationPackage + ".ObjectFactory");
-                    Object of = ofClass.newInstance();
-      //            System.out.println("We have a " + of.getClass().getName());
-                    String className = fact.getClass().getName();
-      //            System.out.println("Fact is a " + className);
-                    String methodName = "create" + className.substring(className.lastIndexOf(".") + 1);
-  //                Method method = of.getClass().getMethod(methodName, new Class[] { fact.getClass() });
-                    Method method = of.getClass().getMethod(methodName, (Class<?>[])null);
-  //                Object o = method.invoke(of, new Object[] { fact });
-                    Object o = method.invoke(of, null);
-                    try { m.marshal(o, baos); }
-                    catch (MarshalException e)
+                    if (verbose || System.getProperty("display.msg", "false").equals("true"))
                     {
-                      System.err.println("MarshalException:");
-                      e.printStackTrace();
-                      javaDump = true;
-                      XMLEncoder encoder = new XMLEncoder(baos);
-                      encoder.writeObject(fact);
-                      encoder.close();
+                      System.out.println(ex3.toString());
+                      System.out.println("-- No way to display the " + fact.getClass().getName() + " --");
                     }
+                    // Last Resort...
+    //                  try
+    //                  {
+    //                    XMLEncoder encoder = new XMLEncoder(System.out);
+    //                    encoder.writeObject(fact);
+    //                    encoder.close();
+    //                  }
+    //                  catch (Exception ex4)
+    //                  {
+    //                    System.out.println("-- No way to display the " + fact.getClass().getName() + " --");
+    //                  }
                   }
-                }
-                catch (Exception ex2)
-                {
-                  if (verbose && ex2 instanceof ClassNotFoundException)
-                  {
-                    System.err.println("Class Not Found [" + destinationPackage + ".ObjectFactory" + "]");
-                  }
-                  if (verbose && ex2 instanceof NoSuchMethodException)
-                  {
-                    System.err.println("Not such method...");
-                  }
-               // System.out.println(ex2.toString());
-                  if (fact instanceof oracle.rules.rl.session.Link)
-                    ; // Skip
-                  else
-                  {  
-                    try
-                    {
-                      m.marshal(fact, baos);
-                    }
-                    catch (Exception ex3)
-                    {
-                      if (verbose || System.getProperty("display.msg", "false").equals("true"))
-                      {
-                        System.out.println(ex3.toString());
-                        System.out.println("-- No way to display the " + fact.getClass().getName() + " --");
-                      }
-                      // Last Resort...
-      //                  try
-      //                  {
-      //                    XMLEncoder encoder = new XMLEncoder(System.out);
-      //                    encoder.writeObject(fact);
-      //                    encoder.close();
-      //                  }
-      //                  catch (Exception ex4)
-      //                  {
-      //                    System.out.println("-- No way to display the " + fact.getClass().getName() + " --");
-      //                  }
-                    }
-                  }
-                }
-                String strDoc = baos.toString();
-                if (strDoc.trim().length() > 0)
-                {
-                  if (verbose) System.out.println(strDoc);
-                  BufferedWriter bw = new BufferedWriter(new FileWriter(factsOutput + File.separator + "fact_" + nf.format(factIndex++) + ".xml"));
-                  bw.write(strDoc);
-                  bw.close();
-                  parser.parse(new StringReader(strDoc));
-                  XMLDocument doc = parser.getDocument();
-                  XMLElement root = (XMLElement)doc.getDocumentElement();
-                  if (javaDump)
-                  {
-                    Comment comment = doc.createComment("comment");
-                    comment.setData("Impossible to marshal [" + fact.getClass().getName() + "], consider reworking your schema (use elements instead of types...)");
-                    root.appendChild(comment);
-                  }
-                  
-                  ByteArrayOutputStream baos4all = new ByteArrayOutputStream();
-                  root.print(baos4all);
-                  allfacts.write(baos4all.toString());
                 }
               }
-              catch (Exception ex)
+              String strDoc = baos.toString();
+              if (strDoc.trim().length() > 0)
               {
-                if (verbose) System.out.println("Marshalling Exception:" + ex.toString());
+                if (verbose) System.out.println(strDoc);
+                BufferedWriter bw = new BufferedWriter(new FileWriter(factsOutput + File.separator + "fact_" + nf.format(factIndex++) + ".xml"));
+                bw.write(strDoc);
+                bw.close();
+                parser.parse(new StringReader(strDoc));
+                XMLDocument doc = parser.getDocument();
+                XMLElement root = (XMLElement)doc.getDocumentElement();
+                if (javaDump)
+                {
+                  Comment comment = doc.createComment("comment");
+                  comment.setData("Impossible to marshal [" + fact.getClass().getName() + "], consider reworking your schema (use elements instead of types...)");
+                  root.appendChild(comment);
+                }
+                
+                ByteArrayOutputStream baos4all = new ByteArrayOutputStream();
+                root.print(baos4all);
+                allfacts.write(baos4all.toString());
               }
             }
-            allfacts.write("</all-facts>\n");
-            allfacts.close();
+            catch (Exception ex)
+            {
+              if (verbose) System.out.println("Marshalling Exception:" + ex.toString());
+            }
           }
-          catch (Exception ex)
-          {
-            ex.printStackTrace();
-          }    
+          allfacts.write("</all-facts>\n");
+          allfacts.close();
+          if (po != null)            
+            pool.returnPoolableRuleSession(po);              
         }
+        catch (Exception ex)
+        {
+          ex.printStackTrace();
+        }    
       }
     }
     catch (Exception e)
@@ -686,5 +743,35 @@ public class AssertXMLFact
   public static String getElapsedTimeString()
   {
     return elapsedTimeString;
+  }
+
+  public static void setInvalidateRulesSession(boolean invalidateRulesSession)
+  {
+    AssertXMLFact.forceInvalidate = invalidateRulesSession;
+  }
+
+  public static boolean isInvalidateRulesSession()
+  {
+    return invalidateRulesSession;
+  }
+  
+  public static void cleanKnowledgeBase()
+  {
+    if (session != null)
+    {
+      Iterator<Object> iterator = session.getFactObjects();
+      while (iterator.hasNext())
+      {
+        try
+        {
+          Object fact = iterator.next();
+          session.callFunctionWithArgument("retract", fact);
+        }
+        catch (RLException rle)
+        {
+          System.err.println(rle.getLocalizedMessage());
+        }
+      }
+    }
   }
 }

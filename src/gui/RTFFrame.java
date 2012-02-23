@@ -315,7 +315,7 @@ public class RTFFrame
     splitInputCheckBox.setText("Split Input Facts");
     splitOutputCheckBox.setText("Split Output Facts");
     eraseFactCheckBox.setText("Erase Before");
-    eraseFactCheckBox.setToolTipText("Cleanup output facts directory before running the test.");
+    eraseFactCheckBox.setToolTipText("<html>Cleanup output facts directory and <br>knowledge base before running the test.</html>");
     menuFile.add( menuFileExit );
     menuBar.add( menuFile );
     menuHelp.add( menuHelpAbout );
@@ -542,10 +542,12 @@ public class RTFFrame
     System.out.println("-------------------------------");
     
     if (eraseFactCheckBox.isSelected())
+    {
       cleanFacts_ActionPerformed(false);
-    
+      AssertXMLFact.cleanKnowledgeBase();
+    }
     // Clean output tabs
-    rlTextArea.setText("");
+//  rlTextArea.setText("");
     rulesOutputTextArea.setText("");
     
     try 
@@ -625,8 +627,11 @@ public class RTFFrame
     { 
       AssertXMLFact.setElapsedTimeString("");
       String code = AssertXMLFact.run(prms, sw); 
-      rlTextArea.setText(code);
-      isCodeGenerated = (code.trim().length() > 0);
+      if (code.trim().length() > 0)
+      {
+        rlTextArea.setText(code); 
+      }
+      isCodeGenerated = (rlTextArea.getText().trim().length() > 0);      
       String elapsed = AssertXMLFact.getElapsedTimeString();
       elapsedTextArea.setText(elapsed);
     }
@@ -732,6 +737,8 @@ public class RTFFrame
     if (fName.trim().length() == 0)
       return;
     
+    AssertXMLFact.setInvalidateRulesSession(true);
+    rlTextArea.setText("");
     menuClean.setEnabled(true);
     testFileName = fName;
     if (fName.trim().length() > 65)

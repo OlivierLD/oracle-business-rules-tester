@@ -102,12 +102,11 @@ public class DynamicCompilationV2
     this.jarOption = jarOption;
   }
 
+  private boolean alreadyCompiled = true;
+
   public ArrayList<String> generate()
   {
     ArrayList<String> atr = new ArrayList<String>(1);
-
-    boolean alreadyDone = true;
-
     long schemaModified = Long.MAX_VALUE;
 
     String jarFileName = schemaURL.toExternalForm().substring(schemaURL.toExternalForm().lastIndexOf("/") + 1);
@@ -136,7 +135,7 @@ public class DynamicCompilationV2
     File srcDirectory = new File(destinationDirectory);
     if (!srcDirectory.exists())
     {
-      alreadyDone = false;
+      alreadyCompiled = false;
     }
     else
     {
@@ -155,7 +154,7 @@ public class DynamicCompilationV2
           };
         long oldest = getOldestElement(srcDirectory, filter);
         if (oldest ==  Long.MAX_VALUE || oldest < schemaModified) // MAX_VALUE: empty directory
-          alreadyDone = false;
+          alreadyCompiled = false;
         else
         {
           if (verbose)
@@ -167,7 +166,7 @@ public class DynamicCompilationV2
       }
     }
 
-    if (alreadyDone)
+    if (alreadyCompiled)
     {
       if (verbose)
         System.out.println("No compilation required");
@@ -175,7 +174,7 @@ public class DynamicCompilationV2
     else if (verbose)
       System.out.println("Compilation required");
 
-    if (!alreadyDone)
+    if (!alreadyCompiled)
     {
       // Recreate output directories
       try { srcDirectory.delete(); } catch (Exception ignore){ System.err.println(ignore.getLocalizedMessage()); }
@@ -550,5 +549,10 @@ public class DynamicCompilationV2
       }
     }
     return als;
+  }
+
+  public boolean isAlreadyCompiled()
+  {
+    return alreadyCompiled;
   }
 }
