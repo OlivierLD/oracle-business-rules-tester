@@ -99,6 +99,8 @@ public class AssertXMLFact
   
   private static boolean invalidateRulesSession = true;
   private static boolean forceInvalidate = false;
+  
+  private final static boolean executeRulesets = false;
 
   private final static void getPrms(String[] prms, boolean print)
   {
@@ -292,6 +294,7 @@ public class AssertXMLFact
         String dmrl = null;
         ArrayList<String> rsrl = new ArrayList<String>();
 
+        long bigBefore = System.currentTimeMillis();
         if (pool == null || invalidateRulesSession)
         {
           // load dictionary  
@@ -386,7 +389,10 @@ public class AssertXMLFact
             {
               // init a rule session
               before = System.currentTimeMillis();
-              session = new RuleSession();
+           // session = new RuleSession();
+              po = pool.getPoolableRuleSession();
+              session = po.getPooledObject(); 
+              
               invalidateRulesSession = false;
               after =  System.currentTimeMillis();
               elapsedTimeString += "Session created\tin " + Long.toString(after - before) + " ms.\n";
@@ -395,27 +401,36 @@ public class AssertXMLFact
               if (rulesOutput == null)
                 rulesOutput = new PrintWriter(System.out);
               session.setOutputWriter(rulesOutput);                  
-                        
-              elapsedTimeString += "-- executeRuleset --\n";
-              long beforeExecuteRuleset =
-              before = System.currentTimeMillis();
-              session.executeRuleset(dmrl); // Parameter is the rules generated code.
-              after =  System.currentTimeMillis();
-              elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
-  //          for (String str : rulesSets)
-  //            session.setRulesetName(str);
-              
+                
+              long beforeExecuteRuleset = 0L;  
+              if (executeRulesets)
+              {
+                elapsedTimeString += "-- executeRuleset --\n";
+                beforeExecuteRuleset = before = System.currentTimeMillis();
+                session.executeRuleset(dmrl); // Parameter is the rules generated code.
+                after =  System.currentTimeMillis();
+                elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
+    //          for (String str : rulesSets)
+    //            session.setRulesetName(str);
+              }  
               retRulesCode = dmrl + "\n";
+              
               for (String codeLine : rsrl)
               {
                 retRulesCode += (codeLine + "\n");
-                before = System.currentTimeMillis();
-                session.executeRuleset(codeLine);
-                after =  System.currentTimeMillis();
-                elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
+                if (executeRulesets)
+                {
+                  before = System.currentTimeMillis();
+                  session.executeRuleset(codeLine);
+                  after =  System.currentTimeMillis();
+                  elapsedTimeString += "    " + Long.toString(after - before) + " ms.\n";
+                }
               }
-              after =  System.currentTimeMillis();
-              elapsedTimeString += "--------------------\nTotal:" + Long.toString(after - beforeExecuteRuleset) + " ms.\n";
+              if (executeRulesets)
+              {
+                after =  System.currentTimeMillis();
+                elapsedTimeString += "--------------------\nTotal:" + Long.toString(after - beforeExecuteRuleset) + " ms.\n";
+              }
             }
             catch (Exception ex)
             {
@@ -428,7 +443,7 @@ public class AssertXMLFact
           // From the pool
           System.out.println("-> Pool now contains " + pool.getInuse() + " session(s) in use");
           po = pool.getPoolableRuleSession();
-//        session = po.getPooledObject(); // FIXME How to put the session in the pool?
+          session = po.getPooledObject(); 
           System.out.println(" ... now " + pool.getInuse() + " session(s) in use");
           System.out.println("-- Rulesets in the session --");
           Map<String, Ruleset> msr = session.getRulesets();
@@ -437,7 +452,10 @@ public class AssertXMLFact
             System.out.println("Ruleset: " + msr.get(s).getName());
           System.out.println("-----------------------------");
         }
-          
+        // Initialization completed
+        after = System.currentTimeMillis();
+        elapsedTimeString += "Initialization completed in " + Long.toString(after - bigBefore) + " ms.\n";        
+        
         try
         {
           if (System.getProperty("display.msg", "false").equals("true")) 
@@ -467,9 +485,9 @@ public class AssertXMLFact
                                                           return "urn:rules-unit";
                                                         }
                                                       });
+          if (verbose) System.out.println("Package name: [" + destinationPackage + "]");
           if (verbose) System.out.println(Integer.toString(facts.getLength()) + " fact(s) to assert.");
-          before = System.currentTimeMillis();
-          long bigBefore = before;
+          bigBefore = before = System.currentTimeMillis();
           for (int i=0; i<facts.getLength(); i++)
           {
             if (verbose) System.out.println("============ Fact ===========");
@@ -532,6 +550,17 @@ public class AssertXMLFact
                 for (Object o : result)
                   System.out.println("- We have a " + o.getClass().getName());
                 System.out.println("============= End of Test =========================");
+              }
+              if (verbose)
+              {
+                Iterator<Object> iterator = session.getFactObjects();
+                int nbf = 0;
+                while (iterator.hasNext())
+                {
+                  nbf++;
+                  iterator.next();
+                }
+                System.out.println("There are " + nbf + " fact(s) in the working memory");
               }
               if (verbose) System.out.print("Now asserting fact...");
               before = System.currentTimeMillis();
