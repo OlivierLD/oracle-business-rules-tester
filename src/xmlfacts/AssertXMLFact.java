@@ -589,11 +589,18 @@ public class AssertXMLFact
           
           if (verbose)
           {
+            session.callFunction("watchAll");
             session.callFunction("showFacts");
             session.callFunction("showActivations");
             session.callFunction("watchFacts");
             session.callFunction("watchRules");
             session.callFunction("watchActivations");
+          }
+          else
+          {
+            session.callFunction("clearWatchFacts");
+            session.callFunction("clearWatchRules");
+            session.callFunction("clearWatchActivations");
           }
           // Running Rulesets here
           before = System.currentTimeMillis();
@@ -641,7 +648,7 @@ public class AssertXMLFact
               System.out.println("==============================================");
               System.out.println("Found " + lines.length + " line(s) in the output.");
               System.out.println("==============================================");
-              String pattern = "(Fire [0-9]+)(\\s)([a-zA-Z\\.]*)(\\s)(f-[0-9]+(.*))";
+              String pattern = "(Fire [0-9]+)(\\s)([a-zA-Z\\.]*)(\\s)(f\\-[0-9]+(.*))";
               Pattern p = Pattern.compile(pattern);
               
               Map<String, Integer> rulesCount = new HashMap<String, Integer>();
