@@ -601,6 +601,7 @@ public class AssertXMLFact
             session.callFunction("clearWatchFacts");
             session.callFunction("clearWatchRules");
             session.callFunction("clearWatchActivations");
+            session.callFunction("clearWatchAll");
           }
           // Running Rulesets here
           before = System.currentTimeMillis();
