@@ -641,14 +641,14 @@ public class AssertXMLFact
           // parse rules output to find rules execution
           if (verbose)
           {
-            System.out.println("Rules output is a " + rulesOutput.getClass().getName() );
+//          System.out.println("Rules output is a " + rulesOutput.getClass().getName() );
             if (rulesOutput instanceof StringWriter)
             {
               StringWriter sw = (StringWriter)rulesOutput;
               String[] lines = sw.getBuffer().toString().split("\\n");
-              System.out.println("==============================================");
-              System.out.println("Found " + lines.length + " line(s) in the output.");
-              System.out.println("==============================================");
+//            System.out.println("==============================================");
+//            System.out.println("Found " + lines.length + " line(s) in the output.");
+//            System.out.println("==============================================");
               String pattern = "(Fire [0-9]+)(\\s)([a-zA-Z\\.]*)(\\s)(f\\-[0-9]+(.*))";
               Pattern p = Pattern.compile(pattern);
               
