@@ -659,12 +659,14 @@ public class RTFFrame
       ex.printStackTrace();
     }
     
+    String rulesOutput = sw.getBuffer().toString();
+    rulesOutputTextArea.setText(rulesOutput);
+    rulesOutputTextArea.repaint();
+
     if (isCodeGenerated)
     {
       try 
       { 
-        rulesOutputTextArea.setText(sw.getBuffer().toString());
-        rulesOutputTextArea.repaint();
         
         BufferedReader br = new BufferedReader(new FileReader(outputFactsTextField.getText() + File.separator + "allfacts.xml"));
         String content = "";
