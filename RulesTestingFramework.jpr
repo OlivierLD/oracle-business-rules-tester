@@ -50,7 +50,7 @@
       <value n="oracle.tip.tools.ide.fabric.addin.SCAProjectMigrator" v="11.1.1.0.0.06;11.1.1.1.0.06"/>
       <value n="oracle.tip.tools.ide.pm.addin.migrator.PMProjectMigrator" v="11.1.1.0.0;11.1.1.1.0"/>
       <value n="oracle.tip.tools.ide.workflow.addin.TaskFormMigratorAddin" v="11.1.1.1.0"/>
-      <value n="oracle.tip.tools.ide.workflow.addin.WorkflowProjectMigrator" v="11.1.1.1.0.08;11.1.1.1.0.09"/>
+      <value n="oracle.tip.tools.ide.workflow.addin.WorkflowProjectMigrator" v="11.1.1.1.0.08;11.1.1.1.0.09;11.1.1.1.0.10"/>
       <value n="oracle.toplink.workbench.addin.migration.PersistenceProjectMigrator" v="11.1.1.1.1"/>
       <value n="oracle.toplink.workbench.addin.migration.TopLinkProjectMigrator" v="11.1.1.0.0;11.1.1.1.0"/>
       <value n="oracle.webcenter.internal.dt.migration.WebCenterProjectMigrator" v="11.1.1.0.0.080729.2353;11.1.1.0.0.080820.1400;11.1.1.0.0.080828.1046;11.1.1.0.0.080925.0854;11.1.1.0.0.081216.0654;11.1.1.1.0.090223.1146;11.1.1.1.0.090318.0800;11.1.1.1.0.090402.0800;11.1.1.1.0.090416.1600;11.1.1.1.0.090505.1600;11.1.1.1.0.090505.1600.1;11.1.1.1.0.090618.1120;11.1.1.2.0.100216.2200"/>
@@ -90,6 +90,7 @@
    <hash n="oracle.ide.model.ResourcePaths">
       <hash n="resourcesContentSet">
          <list n="pattern-filters">
+            <string v="-oracle/rules/versionthree/"/>
             <string v="+oracle/rules"/>
             <string v="+*"/>
          </list>
@@ -137,7 +138,7 @@
             <hash n="archiveOptions">
                <value n="compressed" v="true"/>
                <value n="hasManifest" v="true"/>
-               <value n="mainClass" v="gui.RTFGui"/>
+               <value n="mainClass" v="gui.RTFGuiMain"/>
             </hash>
             <hash n="fileGroups">
                <list n="groups">
@@ -223,7 +224,7 @@
                   </hash>
                </list>
             </hash>
-            <url n="jarURL" path="../../../lib/JarRulesTestingFramework.jar"/>
+            <url n="jarURL" path="deploy/JarRulesTestingFramework.jar"/>
             <value n="profileClass" v="oracle.jdeveloper.deploy.jar.ArchiveProfile"/>
             <value n="profileName" v="JarRulesTestingFramework"/>
          </hash>
@@ -248,6 +249,7 @@
    </hash>
    <hash n="oracle.jdeveloper.model.PathsConfiguration">
       <hash n="javaContentSet">
+         <list n="constituent-sets"/>
          <list n="pattern-filters">
             <string v="+**"/>
          </list>
@@ -405,6 +407,13 @@
    </hash>
    <hash n="oracle.tip.tools.ide.fabric.addin.SCAContentSetProvider">
       <hash n="sca-content">
+         <list n="pattern-filters">
+            <string v="-singleString.xsd"/>
+            <string v="-master.xsd"/>
+            <string v="-InfectionDetectionRuled_DecisionService_1Types.xsd"/>
+            <string v="-bacteriemia.xsd"/>
+            <string v="+**"/>
+         </list>
          <list n="url-path">
             <url path="xsd/"/>
          </list>
