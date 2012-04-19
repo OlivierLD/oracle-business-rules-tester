@@ -136,8 +136,9 @@ public class RTFFrame
   private JCheckBox splitInputCheckBox = new JCheckBox();
   private JCheckBox splitOutputCheckBox = new JCheckBox();
   private JCheckBox eraseFactCheckBox = new JCheckBox();
+  private JCheckBox forceRebuildCheckBox = new JCheckBox();
 
-    public RTFFrame()
+  public RTFFrame()
   {
     try
     {
@@ -316,6 +317,7 @@ public class RTFFrame
     splitOutputCheckBox.setText("Split Output Facts");
     eraseFactCheckBox.setText("Erase Before");
     eraseFactCheckBox.setToolTipText("<html>Cleanup output facts directory and <br>knowledge base before running the test.</html>");
+    forceRebuildCheckBox.setText("Force Rebuild");
     menuFile.add( menuFileExit );
     menuBar.add( menuFile );
     menuHelp.add( menuHelpAbout );
@@ -401,41 +403,36 @@ public class RTFFrame
     runButtonPanel.add(splitInputCheckBox, null);
     runButtonPanel.add(splitOutputCheckBox, null);
     runButtonPanel.add(eraseFactCheckBox, null);
+    runButtonPanel.add(forceRebuildCheckBox, null);
     northPanel.add(runButtonPanel,
-                    new GridBagConstraints(0, 10, 4, 1, 0.0, 0.0,
-                                           GridBagConstraints.CENTER,
-                                           GridBagConstraints.BOTH,
-                                           new Insets(0, 0, 0, 0), 0, 0));
+                   new GridBagConstraints(0, 10, 4, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                                          new Insets(0, 0, 0, 0), 0, 0));
     northPanel.add(ruleSetLabel,
-                    new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
-                                           GridBagConstraints.WEST,
-                                           GridBagConstraints.HORIZONTAL,
-                                           new Insets(0, 0, 0, 0), 0, 0));
+                   new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+                                          new Insets(0, 0, 0, 0), 0, 0));
     northPanel.add(ruleSetButton,
-                    new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0,
-                                           GridBagConstraints.CENTER,
-                                           GridBagConstraints.NONE,
-                                           new Insets(0, 0, 0, 0), 0, 0));
+                   new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                                          new Insets(0, 0, 0, 0), 0, 0));
     //  inputScrollPane.getViewport().add(inputTextArea, null);
     //  jTabbedPane.addTab("Input Facts", inputScrollPane);
     jTabbedPane.addTab("Input Facts", inputTabbedPane);
     inputTabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
     inputTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-    
+
     rlCodeScrollPane.getViewport().add(rlTextArea, null);
     jTabbedPane.addTab("RL", rlCodeScrollPane);
-    
+
     rulesOutputScrollPane.getViewport().add(rulesOutputTextArea, null);
     jTabbedPane.addTab("Rules Output", rulesOutputScrollPane);
-    
+
     //  outputScrollPane.getViewport().add(outputTextArea, null);
     jTabbedPane.addTab("Output Facts", outputTabbedPane);
     outputTabbedPane.setTabPlacement(JTabbedPane.BOTTOM);
     outputTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-    
+
     timeOutputScrollPane.getViewport().add(elapsedTextArea, null);
     jTabbedPane.addTab("Time", timeOutputScrollPane);
-    
+
     tabbedPanel.add(jTabbedPane, BorderLayout.CENTER);
     centerPanel.add(tabbedPanel, BorderLayout.CENTER);
     //                        new GridBagConstraints(0, 11, 4, 1, 0.0, 0.0,
@@ -626,6 +623,9 @@ public class RTFFrame
     try 
     { 
       AssertXMLFact.setElapsedTimeString("");
+      if (forceRebuildCheckBox.isSelected())
+        AssertXMLFact.setInvalidateRulesSession(true);
+      
       String code = AssertXMLFact.run(prms, sw); 
       if (code.trim().length() > 0)
       {
