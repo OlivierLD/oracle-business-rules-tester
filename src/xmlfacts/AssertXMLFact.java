@@ -51,6 +51,9 @@ import oracle.rules.rl.Ruleset;
 import oracle.rules.rl.exceptions.RLException;
 import oracle.rules.rl.extensions.pool.PoolableObject;
 import oracle.rules.rl.extensions.pool.RuleSessionPool;
+import oracle.rules.rl.trace.DecisionTrace;
+import oracle.rules.rl.trace.FactTrace;
+import oracle.rules.rl.trace.TraceEntry;
 import oracle.rules.sdk2.decisionpoint.DecisionPointDictionaryFinder;
 import oracle.rules.sdk2.dictionary.DOID;
 import oracle.rules.sdk2.dictionary.RuleDictionary;
@@ -227,7 +230,7 @@ public class AssertXMLFact
     long before = System.currentTimeMillis(), after = 0L;
 
     use_assert_tree = (System.getProperty("use.assert.tree", "false").equals("true"));
-    if (rulesSets == null || invalidateRulesSession)
+//  if (rulesSets == null || invalidateRulesSession)
       rulesSets = new ArrayList<String>(1);
 
     getPrms(args, System.getProperty("display.msg", "false").equals("true"));
@@ -568,12 +571,12 @@ public class AssertXMLFact
                 }
                 System.out.println("There are " + nbf + " fact(s) in the working memory");
               }
-              if (verbose) System.out.print("Now asserting fact...");
+              System.out.print("Now asserting fact... (using " + (use_assert_tree?"assertTree":"assert") + ")");
               before = System.currentTimeMillis();
               session.callFunctionWithArgument((use_assert_tree?"assertTree":"assert"), unmarshalled); 
               after =  System.currentTimeMillis();
               elapsedTimeString += "  - 1 fact asserted\tin " + Long.toString(after - bigBefore) + " ms.\n";
-              if (verbose) System.out.println("...Fact " + (use_assert_tree?"(tree)":"") + "asserted");
+              if (verbose) System.out.println("... Fact" + (use_assert_tree?" (tree)":"") + " asserted");
             }
             catch (Exception wow)
             {
@@ -595,6 +598,7 @@ public class AssertXMLFact
             session.callFunction("watchFacts");
             session.callFunction("watchRules");
             session.callFunction("watchActivations");
+            session.callFunctionWithArgument("setDecisionTraceLevel", RuleSession.DECISION_TRACE_DEVELOPMENT);
           }
           else
           {
@@ -602,6 +606,7 @@ public class AssertXMLFact
             session.callFunction("clearWatchRules");
             session.callFunction("clearWatchActivations");
             session.callFunction("clearWatchAll");
+            session.callFunctionWithArgument("setDecisionTraceLevel", RuleSession.DECISION_TRACE_OFF);
           }
           // Running Rulesets here
           before = System.currentTimeMillis();
@@ -637,6 +642,28 @@ public class AssertXMLFact
 
           if (verbose)
             session.callFunction("showFacts");     // After     
+          
+          Integer tl = (Integer)session.callFunction("getDecisionTraceLevel");
+          System.out.println("Trace Level tl is [" + tl.intValue() + "]");
+
+          Object dt = session.callFunction("getDecisionTrace");
+//        System.out.println("DecisionTrace dt is a [" + dt.getClass().getName() + "]");
+          if (dt instanceof DecisionTrace)
+          {
+            DecisionTrace dTrace = (DecisionTrace)dt;
+            List<TraceEntry> entryList = dTrace.getTraceEntries();
+//          System.out.println(entryList.size() + " entry(ies)");
+            for (TraceEntry te : entryList)
+            {
+//            System.out.println("TraceEntry is a " + te.getClass().getName() + ", rule [" + te.getInRule() + "]");
+              if (te instanceof FactTrace)
+              {
+                String inRule = te.getInRule();
+                if (inRule != null)
+                  System.out.println("-> In rule [" + inRule + "] " + ((FactTrace)te).getOperation().value());
+              }
+            }
+          }
           
           // parse rules output to find rules execution
           if (verbose)
