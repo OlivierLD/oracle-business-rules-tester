@@ -404,6 +404,7 @@ public class RTFFrame
     runButtonPanel.add(splitOutputCheckBox, null);
     runButtonPanel.add(eraseFactCheckBox, null);
     runButtonPanel.add(forceRebuildCheckBox, null);
+    forceRebuildCheckBox.setToolTipText("<html>Invalidate Rules Session if checked.<br>Will reuse the Rules Session otherwise.</html>");
     northPanel.add(runButtonPanel,
                    new GridBagConstraints(0, 10, 4, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                                           new Insets(0, 0, 0, 0), 0, 0));
