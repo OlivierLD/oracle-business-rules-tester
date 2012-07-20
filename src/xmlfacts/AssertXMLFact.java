@@ -359,6 +359,7 @@ public class AssertXMLFact
               // generate RL code
               before = System.currentTimeMillis();
               dmrl = dict.dataModelRL();          
+              rsrl.add(dmrl);
               after =  System.currentTimeMillis();
               elapsedTimeString += "RL Generated\tin " + Long.toString(after - before) + " ms.\n";
               if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ RL Generated in " + Long.toString(after - before) + " ms. ]]");
@@ -390,7 +391,15 @@ public class AssertXMLFact
                 dumpDoid(doid);
               }
             }
-            pool = new RuleSessionPool(rsrl);            
+            try { pool = new RuleSessionPool(rsrl); }
+            catch (Exception ex)
+            {
+              JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "OBR Error message", JOptionPane.ERROR_MESSAGE);
+              ex.printStackTrace();
+              System.err.println("------------------------");
+              System.err.println("Generated RL:\n----------\n" + dmrl);
+              throw ex;
+            }
             System.out.println("Pool contains " + pool.getInuse() + " session(s) in use");
     
             try
