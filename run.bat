@@ -5,7 +5,9 @@
 ::
 set JDEV_HOME=C:\JDev.11.1.1.5.0
 ::
-set CP=.\classes
+set CP=
+:: set CP=%CP%;.\classes
+set CP=%CP%;.\deploy\JarRulesTestingFramework.jar
 set CP=%CP%;%JDEV_HOME%\modules\com.oracle.toplink_1.0.0.0_11-1-1-5-0.jar
 set CP=%CP%;%JDEV_HOME%\modules\org.eclipse.persistence_1.1.0.0_2-1.jar
 set CP=%CP%;%JDEV_HOME%\modules\com.bea.core.antlr.runtime_2.7.7.jar
@@ -23,7 +25,8 @@ set CP=%CP%;%JDEV_HOME%\modules\javax.jms_1.1.1.jar
 set CP=%CP%;%JDEV_HOME%\modules\javax.jsp_1.2.0.0_2-1.jar
 set CP=%CP%;%JDEV_HOME%\modules\javax.jws_2.0.jar
 set CP=%CP%;%JDEV_HOME%\modules\javax.activation_1.1.0.0_1-1.jar
-set CP=%CP%;%JDEV_HOME%\modules\javax.mail_1.1.0.0_1-4-1.jar;%JDEV_HOME%\modules\javax.xml.soap_1.3.1.0.jar
+set CP=%CP%;%JDEV_HOME%\modules\javax.mail_1.1.0.0_1-4-1.jar
+set CP=%CP%;%JDEV_HOME%\modules\javax.xml.soap_1.3.1.0.jar
 set CP=%CP%;%JDEV_HOME%\modules\javax.xml.rpc_1.2.1.jar
 set CP=%CP%;%JDEV_HOME%\modules\javax.xml.ws_2.1.1.jar
 set CP=%CP%;%JDEV_HOME%\modules\javax.management.j2ee_1.0.jar
