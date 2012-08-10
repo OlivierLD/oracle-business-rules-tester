@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -59,6 +60,8 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import xmlfacts.AssertXMLFact;
+
+import jsyntaxpane.DefaultSyntaxKit;
 
 public class RTFFrame
   extends JFrame
@@ -443,6 +446,9 @@ public class RTFFrame
     panelCenter.add(northPanel, BorderLayout.NORTH);
     panelCenter.add(centerPanel, BorderLayout.CENTER);
     this.getContentPane().add(panelCenter, BorderLayout.CENTER);
+    
+    // For syntax highlighting
+    DefaultSyntaxKit.initKit();
   }
 
   void fileExit_ActionPerformed(ActionEvent e)
@@ -573,7 +579,8 @@ public class RTFFrame
           JPanel panel = new JPanel();
           panel.setLayout(new BorderLayout());
           JScrollPane scrollPane = new JScrollPane();
-          JTextArea textArea = new JTextArea();
+//        JTextArea textArea = new JTextArea();
+          JEditorPane textArea = new JEditorPane();
           textArea.setEditable(false);
           panel.add(scrollPane, BorderLayout.CENTER);
           scrollPane.getViewport().add(textArea, null);
@@ -593,7 +600,9 @@ public class RTFFrame
                 (elem).print(sw);
 //              System.out.println("Fact:\n");
 //              System.out.println(sw.getBuffer().toString());
-                textArea.setText(sw.getBuffer().toString());
+                textArea.setContentType("text/xml");
+                textArea.setText(GnlUtilities.prettyPrint(sw.getBuffer().toString()));
+                textArea.setCaretPosition(0);
                 textArea.repaint();
                 break;
               }
@@ -607,11 +616,14 @@ public class RTFFrame
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         JScrollPane scrollPane = new JScrollPane();
-        JTextArea textArea = new JTextArea();
+//      JTextArea textArea = new JTextArea();
+        JEditorPane textArea = new JEditorPane();
         textArea.setEditable(false);
         panel.add(scrollPane, BorderLayout.CENTER);
         scrollPane.getViewport().add(textArea, null);
-        textArea.setText(content);
+        textArea.setContentType("text/xml");
+        textArea.setText(GnlUtilities.prettyPrint(content));
+        textArea.setCaretPosition(0);
         inputTabbedPane.add("All Input facts", panel);
       }
     } 
@@ -647,11 +659,14 @@ public class RTFFrame
       JPanel panel = new JPanel();
       panel.setLayout(new BorderLayout());
       JScrollPane scrollPane = new JScrollPane();
-      JTextArea textArea = new JTextArea();
+      JEditorPane textArea = new JEditorPane();
       textArea.setEditable(false);
       panel.add(scrollPane, BorderLayout.CENTER);
       scrollPane.getViewport().add(textArea, null);
-      textArea.setText("");
+      textArea.setContentType("text/xml");
+      textArea.setText(GnlUtilities.prettyPrint(""));
+      textArea.setCaretPosition(0);
+
       outputTabbedPane.add("All Output facts", panel);
       outputTabbedPane.repaint();
     }
@@ -693,7 +708,8 @@ public class RTFFrame
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout());
             JScrollPane scrollPane = new JScrollPane();
-            JTextArea textArea = new JTextArea();
+//          JTextArea textArea = new JTextArea();
+            JEditorPane textArea = new JEditorPane();
             textArea.setEditable(false);
             panel.add(scrollPane, BorderLayout.CENTER);
             scrollPane.getViewport().add(textArea, null);
@@ -703,7 +719,9 @@ public class RTFFrame
             tabLabel = "[" + fact.getNodeName() + "] " + tabLabel;
             (fact).print(sw2);
   //        System.out.println(sw2.getBuffer().toString());
-            textArea.setText(sw2.getBuffer().toString());
+            textArea.setContentType("text/xml");
+            textArea.setText(GnlUtilities.prettyPrint(sw2.getBuffer().toString()));
+            textArea.setCaretPosition(0);
             textArea.repaint();
             outputTabbedPane.add(tabLabel, panel);
           }
@@ -713,11 +731,14 @@ public class RTFFrame
           JPanel panel = new JPanel();
           panel.setLayout(new BorderLayout());
           JScrollPane scrollPane = new JScrollPane();
-          JTextArea textArea = new JTextArea();
+//        JTextArea textArea = new JTextArea();
+          JEditorPane textArea = new JEditorPane();
           textArea.setEditable(false);
           panel.add(scrollPane, BorderLayout.CENTER);
           scrollPane.getViewport().add(textArea, null);
+          textArea.setContentType("text/xml");
           textArea.setText(content);
+          textArea.setCaretPosition(0);
           outputTabbedPane.add("All Output facts", panel);
         }
       } 

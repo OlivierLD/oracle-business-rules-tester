@@ -4,11 +4,18 @@ import java.awt.Component;
 
 import java.io.File;
 
+import java.io.StringWriter;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 
 public class GnlUtilities
 {
@@ -55,6 +62,23 @@ public class GnlUtilities
         break;
     }
     return fileName;
+  }
+
+  public static String prettyPrint(String xml)
+  {
+    try
+    {
+      Document doc = DocumentHelper.parseText(xml);
+      StringWriter sw = new StringWriter();
+      OutputFormat format = OutputFormat.createPrettyPrint();
+      XMLWriter xw = new XMLWriter(sw, format);
+      xw.write(doc);
+      return sw.toString();
+    }
+    catch (Exception e)
+    {
+      return null;
+    }
   }
 
   public static class ToolFileFilter extends FileFilter
