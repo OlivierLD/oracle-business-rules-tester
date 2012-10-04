@@ -39,7 +39,7 @@ public class RTFGuiMain
       }
       else 
       {
-        System.out.println(".Seeting Look and Feel to " + System.getProperty("swing.defaultlaf"));    
+        System.out.println(".Setting Look and Feel to " + System.getProperty("swing.defaultlaf"));    
       }  
       JFrame.setDefaultLookAndFeelDecorated(true);
 //    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
