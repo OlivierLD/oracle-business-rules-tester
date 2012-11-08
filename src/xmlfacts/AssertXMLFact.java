@@ -69,7 +69,6 @@ import org.w3c.dom.Comment;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
 public class AssertXMLFact
 {
   private static boolean use_assert_tree = false; // set by system property use.assert.tree [true|false]
@@ -94,7 +93,7 @@ public class AssertXMLFact
   private static String destinationClassesDirectory = DESTINATION_CLASSES_DIRECTORY;
   private static String factsOutput                 = FACTS_OUTPUT_DIRECTORY;
   
-  public final static DecimalFormat DF = new DecimalFormat("#0.000");
+  public final static DecimalFormat ELAPSED_TIME_FORMAT = new DecimalFormat("#0.000");
   
   private static boolean verbose = true;
   
@@ -274,8 +273,8 @@ public class AssertXMLFact
       }
       after =  System.nanoTime();
       if (!dc.isAlreadyCompiled())
-        elapsedTimeString += "Schema compiled\tin " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
-      if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Schema compiled in " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
+        elapsedTimeString += "Schema compiled\tin " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
+      if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Schema compiled in " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
       // Load the XML Instance
       String jaxbCtxPackName = "";
       for (String s : pl)
@@ -296,8 +295,8 @@ public class AssertXMLFact
         parser.parse(instanceDoc);
         XMLDocument factCollection = parser.getDocument();
         after =  System.nanoTime();
-        elapsedTimeString += "Input Document parsed\tin " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
-        if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Document parsed in " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
+        elapsedTimeString += "Input Document parsed\tin " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
+        if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Document parsed in " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
         
   //      System.out.println(System.getProperty("java.class.path"));
         // Rules part
@@ -321,8 +320,8 @@ public class AssertXMLFact
             List<SDKWarning> warnings = new ArrayList<SDKWarning>();
             dict.update(warnings);
             after =  System.nanoTime();
-            elapsedTimeString += ("Dictionary read\tin " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n");
-            if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Dictionary read  in " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
+            elapsedTimeString += ("Dictionary read\tin " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n");
+            if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Dictionary read  in " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
   
             // RL can only be generated if the dictionary is valid
             if (warnings.size() > 0)
@@ -363,8 +362,8 @@ public class AssertXMLFact
               dmrl = dict.dataModelRL();          
               rsrl.add(dmrl);
               after =  System.nanoTime();
-              elapsedTimeString += "RL Generated\tin " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
-              if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ RL Generated in " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
+              elapsedTimeString += "RL Generated\tin " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
+              if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ RL Generated in " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
               StringTokenizer strtok = new StringTokenizer(ruleSetName, ",");
               while (strtok.hasMoreTokens())
               {
@@ -414,8 +413,8 @@ public class AssertXMLFact
               
               invalidateRulesSession = false;
               after =  System.nanoTime();
-              elapsedTimeString += "Session created\tin " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
-              if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Session created in " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
+              elapsedTimeString += "Session created\tin " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
+              if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Session created in " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
   //          StringTokenizer strtok = new StringTokenizer(ruleSetName, ",");
               long beforeExecuteRuleset = 0L;  
               if (executeRulesets)
@@ -424,7 +423,7 @@ public class AssertXMLFact
                 beforeExecuteRuleset = before = System.nanoTime();
                 session.executeRuleset(dmrl); // Parameter is the rules generated code.
                 after =  System.nanoTime();
-                elapsedTimeString += "    " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
+                elapsedTimeString += "    " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
     //          for (String str : rulesSets)
     //            session.setRulesetName(str);
               }  
@@ -438,7 +437,7 @@ public class AssertXMLFact
                   before = System.nanoTime();
                   session.executeRuleset(codeLine);
                   after =  System.nanoTime();
-                  elapsedTimeString += "    " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
+                  elapsedTimeString += "    " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
                 }
               }
               if (executeRulesets)
@@ -473,7 +472,7 @@ public class AssertXMLFact
         
         // Initialization completed
         after = System.nanoTime();
-        elapsedTimeString += "Initialization completed in " + DF.format((double)(after - bigBefore)/1E9) + " s (" +  Long.toString(after - bigBefore) + " ns).\n";        
+        elapsedTimeString += "Initialization completed in " + ELAPSED_TIME_FORMAT.format((double)(after - bigBefore)/1E9) + " s (" +  Long.toString(after - bigBefore) + " ns).\n";        
         
         try
         {
@@ -488,7 +487,7 @@ public class AssertXMLFact
           }
 //          elapsedTimeString += "RL executed\tin " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
           if (System.getProperty("display.msg", "false").equals("true")) 
-            System.out.println(" == [[ RL executed in " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
+            System.out.println(" == [[ RL executed in " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
           if (verbose)
           {
             // Print out RL code
@@ -586,7 +585,7 @@ public class AssertXMLFact
               before = System.nanoTime();
               session.callFunctionWithArgument((use_assert_tree?"assertTree":"assert"), unmarshalled); 
               after =  System.nanoTime();
-              elapsedTimeString += "  - 1 fact asserted\tin " + DF.format((double)(after - bigBefore)/1E9) + " s (" +  Long.toString(after - bigBefore) + " ns).\n";
+              elapsedTimeString += "  - 1 fact asserted\tin " + ELAPSED_TIME_FORMAT.format((double)(after - bigBefore)/1E9) + " s (" +  Long.toString(after - bigBefore) + " ns).\n";
               if (verbose) System.out.println("... Fact" + (use_assert_tree?" (tree)":"") + " asserted");
             }
             catch (Exception wow)
@@ -598,8 +597,8 @@ public class AssertXMLFact
             }
           }
           after =  System.nanoTime();
-          elapsedTimeString += "Facts asserted\tin " + DF.format((double)(after - bigBefore)/1E9) + " s (" +  Long.toString(after - bigBefore) + " ns).\n";
-          if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Facts asserted in " + DF.format((double)(after - bigBefore)/1E9) + " s (" +  Long.toString(after - bigBefore) + " ns). ]]");
+          elapsedTimeString += "Facts asserted\tin " + ELAPSED_TIME_FORMAT.format((double)(after - bigBefore)/1E9) + " s (" +  Long.toString(after - bigBefore) + " ns).\n";
+          if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Facts asserted in " + ELAPSED_TIME_FORMAT.format((double)(after - bigBefore)/1E9) + " s (" +  Long.toString(after - bigBefore) + " ns). ]]");
           
           if (verbose)
           {
@@ -642,12 +641,12 @@ public class AssertXMLFact
             long beforeRS = System.nanoTime();
             session.callFunctionWithArgument("run", rs); // Here is the execution of the ruleset
             long afterRS = System.nanoTime();
-            elapsedTimeString += "- Ruleset [" + rs + "] executed\tin " + DF.format((double)(afterRS - beforeRS)/1E9) + " s (" +  Long.toString(afterRS - beforeRS) + " ns).\n";
+            elapsedTimeString += "- Ruleset [" + rs + "] executed\tin " + ELAPSED_TIME_FORMAT.format((double)(afterRS - beforeRS)/1E9) + " s (" +  Long.toString(afterRS - beforeRS) + " ns).\n";
           }          
           after =  System.nanoTime();
-          elapsedTimeString += "Ruleset(s) executed\tin " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
+          elapsedTimeString += "Ruleset(s) executed\tin " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
           if (System.getProperty("display.msg", "false").equals("true")) 
-            System.out.println(" == [[ Ruleset(s) executed in " + DF.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
+            System.out.println(" == [[ Ruleset(s) executed in " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
           
           if (verbose) System.out.println("================================================================");
 
