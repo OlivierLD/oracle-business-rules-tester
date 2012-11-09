@@ -102,7 +102,7 @@ public class SampleJUnit
         
         try 
         { 
-          NodeList nl = doc.selectNodes("/ns:guy[./ns:name/text() = 'Jack the Killer']/ns:access-status", guyResolver);
+          NodeList nl = doc.selectNodes("/ns:guy[./ns:name = 'Jack the Killer']/ns:access-status", guyResolver);
           String status = null;
           if (nl.getLength() > 0)
           {
