@@ -521,7 +521,7 @@ public class RTFFrame
     prms[p++] = "-src-dest-directory";
     prms[p++] = generatedSourcesTextField.getText();
     prms[p++] = "-dest-package";
-    prms[p++] = packageNameTextField.getText();
+    prms[p++] = ("\"" + packageNameTextField.getText() + "\"");
     prms[p++] = "-class-dest-directory";
     prms[p++] = classesDirectoryTextField.getText();
     prms[p++] = ""; // "-jaxb-jars";
@@ -683,7 +683,6 @@ public class RTFFrame
     {
       try 
       { 
-        
         BufferedReader br = new BufferedReader(new FileReader(outputFactsTextField.getText() + File.separator + "allfacts.xml"));
         String content = "";
         String line = "";

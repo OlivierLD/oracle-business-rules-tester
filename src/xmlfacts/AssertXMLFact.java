@@ -227,6 +227,13 @@ public class AssertXMLFact
   
   public static String run(String[] args, Writer rulesOutput)
   {
+    if (verbose)
+    {
+      System.out.println("AssertXMLFact.run arguments:");
+      for (String s : args)
+        System.out.println(s);
+    }
+    
     String retRulesCode = "";
     long before = System.nanoTime(), after = 0L;
 
@@ -581,7 +588,7 @@ public class AssertXMLFact
                 }
                 System.out.println("There are " + nbf + " fact(s) in the working memory");
               }
-              System.out.print("Now asserting fact... (using " + (use_assert_tree?"assertTree":"assert") + ")");
+              if (verbose) System.out.print("Now asserting fact... (using " + (use_assert_tree?"assertTree":"assert") + ")");
               before = System.nanoTime();
               session.callFunctionWithArgument((use_assert_tree?"assertTree":"assert"), unmarshalled); 
               after =  System.nanoTime();

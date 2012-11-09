@@ -1,5 +1,6 @@
 package javatools.jaxb;
 
+import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.Driver;
 
 import java.io.File;
@@ -183,10 +184,10 @@ public class DynamicCompilationV2
       try { compiledClasses.delete(); } catch (Exception ignore){ System.err.println(ignore.getLocalizedMessage()); }
       try { compiledClasses.mkdirs(); } catch (Exception ignore){ System.err.println(ignore.getLocalizedMessage()); }
 
+      String[] compargs = null;
       try
       {
         // JAX-B Compilation
-        String[] compargs = null;
         if (destinationPackage == null || destinationPackage.trim().length() == 0)
           compargs = new String[] { "-extension",
                                     "-d", destinationDirectory,
@@ -305,6 +306,16 @@ public class DynamicCompilationV2
           String jarFilePath = jaxbClassesDirectory + File.separator + jarFileName;
           createJarFile(toArchive.toArray(), jarFilePath, jaxbClassesDirectory);
         }
+      }
+      catch (BadCommandLineException bcle)
+      {
+        System.err.println(bcle.toString());        
+        System.err.println("Compile Args:");
+        for (String arg : compargs)
+          System.err.print(arg + " ");
+        System.err.println();
+        System.err.println("=======================");
+        bcle.printStackTrace();
       }
       catch (Exception ex)
       {
