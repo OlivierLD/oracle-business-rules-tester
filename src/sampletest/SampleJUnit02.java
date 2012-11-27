@@ -11,6 +11,8 @@ import oracle.xml.parser.v2.XMLDocument;
 import oracle.xml.parser.v2.XMLElement;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 
@@ -20,12 +22,8 @@ import org.w3c.dom.NodeList;
 import xmlfacts.AssertXMLFact;
 
 
-public class SampleJUnit
+public class SampleJUnit02
 {
-  @Test
-  public void akeu()
-  {}
-
   @Test
   public void rulesTester()
   {
@@ -34,11 +32,12 @@ public class SampleJUnit
        "-verbose",              "false",
        "-repository-path",      "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\oracle\\rules\\elaboratedbarrules\\SpecialOracleRules.rules", 
        "-ruleset-name",         "RulesetOne", 
-       "-schema-location",      "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\xsd\\bar_customer.xsd", 
+//     "-schema-location",      "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\xsd\\bar_customer.xsd", 
        "-xml-instance-name",    "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\input\\input-facts.xml", 
-       "-src-dest-directory",   "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\gen-src", 
-       "-dest-package",         "",
-       "-class-dest-directory", "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\gen-classes", 
+//     "-src-dest-directory",   "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\gen-src", 
+       "-dest-package",         "org.party:org.party.v2",
+       "-skip-jaxb", 
+//     "-class-dest-directory", "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\gen-classes", 
        "-facts-output",         "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\output" 
      };
     // Run the requirted rulesets
@@ -134,8 +133,4 @@ public class SampleJUnit
       fail(ex.toString());
     }
   }
-
-  @Test
-  public void coucou()
-  { fail("ta mere"); }
 }

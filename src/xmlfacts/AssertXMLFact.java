@@ -109,6 +109,8 @@ public class AssertXMLFact
   private static boolean invalidateRulesSession = true;
   private static boolean forceInvalidate = false;
   
+  private static boolean skipJAXB = false;
+  
   private final static boolean executeRulesets = false;
 
   private final static void getPrms(String[] prms, boolean print)
@@ -123,6 +125,8 @@ public class AssertXMLFact
         if (print)
           System.out.println(prms[i] + ":\t" + Boolean.toString(verbose));
       }
+      if (prms[i].equals("-skip-jaxb"))
+        skipJAXB = true;
       if (prms[i].equals("-repository-path"))      
       {
         repositoryPath = prms[i+1];
@@ -242,50 +246,70 @@ public class AssertXMLFact
       rulesSets = new ArrayList<String>(1);
 
     getPrms(args, System.getProperty("display.msg", "false").equals("true"));
+    if (skipJAXB && destinationPackage.trim().length() == 0)
+    {
+      System.out.println("Please provide the JAX-B Context in the destination package (-dest-pack) if you want to skip the JAX-B Compilation");
+      System.out.println("The elements of the JAX-B Context must also be available in the current classpath.");
+      System.exit(1);
+    }
     try
     {
-      URL schemaUrl = null;
-      File sf = new File(schemaLocation);
-      if (!sf.exists())
-        schemaUrl = new URL(schemaLocation);
-      else
-        schemaUrl = sf.toURI().toURL();
       // Compilation Part
+      DynamicCompilationV2 dc = null; 
+      ArrayList<String> pl = null;
       before = System.nanoTime();
-      DynamicCompilationV2 dc = new DynamicCompilationV2(schemaUrl, 
-                                                         destinationSrcDirectory, 
-                                                         destinationPackage, // blank: default
-                                                         destinationClassesDirectory, 
-//                                                       jaxbCompilerJars, 
-                                                         verbose, 
-                                                         DynamicCompilationV2.CREATE_JAR_FILE);    
-      ArrayList<String> pl = dc.generate();
-      invalidateRulesSession = !dc.isAlreadyCompiled();
+      if (!skipJAXB)
+      {
+        URL schemaUrl = null;
+        File sf = new File(schemaLocation);
+        if (!sf.exists())
+          schemaUrl = new URL(schemaLocation);
+        else
+          schemaUrl = sf.toURI().toURL();
+        dc = new DynamicCompilationV2(schemaUrl, 
+                                      destinationSrcDirectory, 
+                                      destinationPackage, // blank: default
+                                      destinationClassesDirectory, 
+//                                    jaxbCompilerJars, 
+                                      verbose, 
+                                      DynamicCompilationV2.CREATE_JAR_FILE);    
+        pl = dc.generate();
+        invalidateRulesSession = !dc.isAlreadyCompiled();
+        String clsName = pl.get(0) + ".ObjectFactory";
+        try
+        {
+        /* Class generatedClass = */ Class.forName(clsName);
+          if (verbose) System.out.println("Loaded!");
+        }
+        catch (ClassNotFoundException cnfe)
+        {
+          System.out.println("------------------------------");
+          System.out.println("Problem loading [" + clsName + "]");
+          System.out.println("------------------------------");
+        }
+        after =  System.nanoTime();
+        if (!dc.isAlreadyCompiled())
+          elapsedTimeString += "Schema compiled\tin " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
+      }
+      else
+        invalidateRulesSession = false;
+
       if (forceInvalidate)
       {
         invalidateRulesSession = true;
         forceInvalidate = false; // Reset
       }
-      String clsName = pl.get(0) + ".ObjectFactory";
-      try
-      {
-     /* Class generatedClass = */ Class.forName(clsName);
-        if (verbose) System.out.println("Loaded!");
-      }
-      catch (ClassNotFoundException cnfe)
-      {
-        System.out.println("------------------------------");
-        System.out.println("Problem loading [" + clsName + "]");
-        System.out.println("------------------------------");
-      }
-      after =  System.nanoTime();
-      if (!dc.isAlreadyCompiled())
-        elapsedTimeString += "Schema compiled\tin " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
       if (System.getProperty("display.msg", "false").equals("true")) System.out.println(" == [[ Schema compiled in " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns). ]]");
       // Load the XML Instance
       String jaxbCtxPackName = "";
-      for (String s : pl)
-        jaxbCtxPackName += ((jaxbCtxPackName.length()>0?":":"") + s);
+      if (pl != null)
+      {
+        for (String s : pl)
+          jaxbCtxPackName += ((jaxbCtxPackName.length()>0?":":"") + s);
+      }
+      else
+        jaxbCtxPackName = destinationPackage;
+
       if (verbose) System.out.println("JAXBContext [" + jaxbCtxPackName + "]");
       context = JAXBContext.newInstance(jaxbCtxPackName);
       Unmarshaller um = context.createUnmarshaller();
