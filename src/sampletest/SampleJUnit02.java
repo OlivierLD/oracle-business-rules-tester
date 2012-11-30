@@ -42,7 +42,7 @@ public class SampleJUnit02
        AssertXMLFact.SKIP_JAXB_PRM, 
        AssertXMLFact.FACT_OUTPUT_PRM,     OUTPUT_DIR
      };
-    // Run the requirted rulesets
+    // Run the required rulesets
     /* String code = */ AssertXMLFact.run(prm, null);
     // Now retrieve output facts, and do the tests
     try

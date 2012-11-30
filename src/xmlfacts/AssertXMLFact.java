@@ -463,7 +463,8 @@ public class AssertXMLFact
               if (executeRulesets)
               {
                 elapsedTimeString += "-- executeRuleset --\n";
-                beforeExecuteRuleset = before = System.nanoTime();
+                beforeExecuteRuleset = System.nanoTime();
+                before = beforeExecuteRuleset;
                 session.executeRuleset(dmrl); // Parameter is the rules generated code.
                 after =  System.nanoTime();
                 elapsedTimeString += "    " + ELAPSED_TIME_FORMAT.format((double)(after - before)/1E9) + " s (" +  Long.toString(after - before) + " ns).\n";
@@ -549,7 +550,8 @@ public class AssertXMLFact
                                                       });
           if (verbose) System.out.println("Package name: [" + destinationPackage + "]");
           if (verbose) System.out.println(Integer.toString(facts.getLength()) + " fact(s) to assert.");
-          bigBefore = before = System.nanoTime();
+          bigBefore = System.nanoTime();
+          before = bigBefore;
           for (int i=0; i<facts.getLength(); i++)
           {
             if (verbose) System.out.println("============ Fact ===========");
@@ -572,7 +574,7 @@ public class AssertXMLFact
             }
             try
             {
-              Object unmarshalled = um.unmarshal((Node)fact);
+              Object unmarshalled = um.unmarshal(/*(Node)*/fact);
               if (unmarshalled instanceof JAXBElement) // 01-Jul-2008
               {
                 JAXBElement jaxbElement = (JAXBElement)unmarshalled;
@@ -590,7 +592,7 @@ public class AssertXMLFact
                 String objFact   = packName + ".ObjectFactory";
                 try
                 {
-                  Class ofClass = Class.forName(objFact);
+               /* Class ofClass = */ Class.forName(objFact);
                   destinationPackage = packName;
                 }
                 catch (ClassNotFoundException cnfe)
@@ -797,7 +799,7 @@ public class AssertXMLFact
     //            System.out.println("Fact is a " + className);
                   String methodName = "create" + className.substring(className.lastIndexOf(".") + 1);
 //                Method method = of.getClass().getMethod(methodName, new Class[] { fact.getClass() });
-                  Method method = of.getClass().getMethod(methodName, (Class<?>[])null);
+                  Method method = of.getClass().getMethod(methodName, new java.lang.Class[] {}); // (Class<?>[])null);
 //                Object o = method.invoke(of, new Object[] { fact });
                   Object o = method.invoke(of); //, null);
                   try { m.marshal(o, baos); }

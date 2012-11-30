@@ -49,7 +49,7 @@ public class SampleJUnit
        AssertXMLFact.CLS_DIRECTORY_PRM,   GEN_CLASSES_LOCATION, 
        AssertXMLFact.FACT_OUTPUT_PRM,     OUTPUT_DIR
      };
-    // Run the requirted rulesets
+    // Run the required rulesets
     /* String code = */ AssertXMLFact.run(prm, null);
     // Now retrieve output facts, and do the tests
     try
