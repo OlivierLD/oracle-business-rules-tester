@@ -98,6 +98,9 @@ set CP=%CP%;%JDEV_HOME%\jdeveloper\ide\macros\..\..\..\oracle_common\modules\ora
 set CP=%CP%;%JDEV_HOME%\oracle_common\modules\oracle.xdk_11.1.0\xml.jar
 set CP=%CP%;%JDEV_HOME%\jdk160_24\lib\tools.jar
 ::
+set CP=%CP%;.\lib\jsyntaxpane-0.9.5-b29.jar
+set CP=%CP%;.\lib\dom4j-1.6.1.jar
+::
 java -classpath %CP% gui.RTFGuiMain
 ::
 @endlocal

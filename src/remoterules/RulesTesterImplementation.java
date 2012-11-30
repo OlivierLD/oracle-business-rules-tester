@@ -24,7 +24,7 @@ public class RulesTesterImplementation
   private RulesTesterImplementation instance = this;
 
   private transient Registry registry     = null;
-  private int registryPort                = 1099; // Default value
+  private int registryPort                = 1100; // Default value
   
   private transient Thread serverThread = null;
   
