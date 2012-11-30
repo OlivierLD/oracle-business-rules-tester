@@ -26,27 +26,35 @@ public class SampleJUnit
   public void akeu()
   {}
 
+  private final static String REPOSITORY_PATH      = "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\oracle\\rules\\elaboratedbarrules\\SpecialOracleRules.rules";
+  private final static String RULSET_NAME          = "RulesetOne";
+  private final static String SCHEMA_LOCATION      = "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\xsd\\bar_customer.xsd";
+  private final static String INSTANCE_NAME        = "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\input\\input-facts.xml";
+  private final static String SRC_LOCATION         = "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\gen-src";
+  private final static String GEN_CLASSES_LOCATION = "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\gen-classes";
+  private final static String OUTPUT_DIR           = "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\output";
+  
   @Test
   public void rulesTester()
   {
     String[] prm = 
      { 
-       "-verbose",              "false",
-       "-repository-path",      "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\oracle\\rules\\elaboratedbarrules\\SpecialOracleRules.rules", 
-       "-ruleset-name",         "RulesetOne", 
-       "-schema-location",      "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\xsd\\bar_customer.xsd", 
-       "-xml-instance-name",    "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\input\\input-facts.xml", 
-       "-src-dest-directory",   "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\gen-src", 
-       "-dest-package",         "",
-       "-class-dest-directory", "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\gen-classes", 
-       "-facts-output",         "C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\output" 
+       AssertXMLFact.VERBOSE_PRM,         "false",
+       AssertXMLFact.REPOSITORY_PATH_PRM, REPOSITORY_PATH, 
+       AssertXMLFact.RULESET_NAME_PRM,    RULSET_NAME, 
+       AssertXMLFact.SCHENA_LOC_PRM,      SCHEMA_LOCATION, 
+       AssertXMLFact.INSTANCE_NAME_PRM,   INSTANCE_NAME, 
+       AssertXMLFact.SRC_DIRECTORY_PRM,   SRC_LOCATION, 
+       AssertXMLFact.PACKAGE_NAME_PRM,    "",
+       AssertXMLFact.CLS_DIRECTORY_PRM,   GEN_CLASSES_LOCATION, 
+       AssertXMLFact.FACT_OUTPUT_PRM,     OUTPUT_DIR
      };
     // Run the requirted rulesets
     /* String code = */ AssertXMLFact.run(prm, null);
     // Now retrieve output facts, and do the tests
     try
     {
-      BufferedReader br = new BufferedReader(new FileReader("C:\\_mywork\\FusionApps\\FATOOLS\\ElaboratedBarRules\\output" + File.separator + "allfacts.xml"));
+      BufferedReader br = new BufferedReader(new FileReader(OUTPUT_DIR + File.separator + "allfacts.xml"));
       String content = "";
       String line = "";
       while (line != null)

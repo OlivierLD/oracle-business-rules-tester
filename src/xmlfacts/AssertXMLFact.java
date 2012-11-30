@@ -93,6 +93,18 @@ public class AssertXMLFact
   private static String destinationClassesDirectory = DESTINATION_CLASSES_DIRECTORY;
   private static String factsOutput                 = FACTS_OUTPUT_DIRECTORY;
   
+  public final static String VERBOSE_PRM         = "-verbose";
+  public final static String REPOSITORY_PATH_PRM = "-repository-path"; 
+  public static final String SCHENA_LOC_PRM      = "-schema-location";
+  public final static String RULESET_NAME_PRM    = "-ruleset-name"; 
+  public final static String INSTANCE_NAME_PRM   = "-xml-instance-name"; 
+  public final static String PACKAGE_NAME_PRM    = "-dest-package";
+  public final static String SKIP_JAXB_PRM       = "-skip-jaxb"; 
+  public final static String FACT_OUTPUT_PRM     = "-facts-output"; 
+  public final static String SRC_DIRECTORY_PRM   = "-src-dest-directory"; 
+  public final static String CLS_DIRECTORY_PRM   = "-class-dest-directory"; 
+  
+  
   public final static DecimalFormat ELAPSED_TIME_FORMAT = new DecimalFormat("#0.000");
   
   private static boolean verbose = true;
@@ -117,7 +129,7 @@ public class AssertXMLFact
   {
     for (int i=0; i<prms.length; i++)
     {
-      if (prms[i].equals("-verbose"))
+      if (prms[i].equals(VERBOSE_PRM))
       {
         verbose = (prms[i+1].equalsIgnoreCase("Y") ||
                    prms[i+1].equalsIgnoreCase("YES") ||
@@ -125,45 +137,45 @@ public class AssertXMLFact
         if (print)
           System.out.println(prms[i] + ":\t" + Boolean.toString(verbose));
       }
-      if (prms[i].equals("-skip-jaxb"))
+      if (prms[i].equals(SKIP_JAXB_PRM))
         skipJAXB = true;
-      if (prms[i].equals("-repository-path"))      
+      if (prms[i].equals(REPOSITORY_PATH_PRM))      
       {
         repositoryPath = prms[i+1];
         if (print)
           System.out.println(prms[i] + ":\t" + repositoryPath);
       }
-      if (prms[i].equals("-ruleset-name"))
+      if (prms[i].equals(RULESET_NAME_PRM))
       {
         ruleSetName = prms[i+1];
         if (print)
           System.out.println(prms[i] + ":\t" + ruleSetName);
       }
-      if (prms[i].equals("-schema-location"))      
+      if (prms[i].equals(SCHENA_LOC_PRM))      
       {
         schemaLocation = prms[i+1];
         if (print)
           System.out.println(prms[i] + ":\t" + schemaLocation);
       }
-      if (prms[i].equals("-xml-instance-name"))   
+      if (prms[i].equals(INSTANCE_NAME_PRM))   
       {
         xmlInstanceName = prms[i+1];
         if (print)
           System.out.println(prms[i] + ":\t" + xmlInstanceName);
       }
-      if (prms[i].equals("-src-dest-directory"))
+      if (prms[i].equals(SRC_DIRECTORY_PRM))
       {
         destinationSrcDirectory = prms[i+1];
         if (print)
           System.out.println(prms[i] + ":\t" + destinationSrcDirectory);
       }
-      if (prms[i].equals("-dest-package")) 
+      if (prms[i].equals(PACKAGE_NAME_PRM)) 
       {
         destinationPackage = prms[i+1];
         if (print)
           System.out.println(prms[i] + ":\t" + destinationPackage);
       }
-      if (prms[i].equals("-class-dest-directory")) 
+      if (prms[i].equals(CLS_DIRECTORY_PRM)) 
       {
         destinationClassesDirectory = prms[i+1];
         if (print)
@@ -175,7 +187,7 @@ public class AssertXMLFact
 //        if (print)
 //          System.out.println(prms[i] + ":\t" + jaxbCompilerJars);
 //      }
-      if (prms[i].equals("-facts-output")) 
+      if (prms[i].equals(FACT_OUTPUT_PRM)) 
       {
         factsOutput = prms[i+1];
         if (print)
